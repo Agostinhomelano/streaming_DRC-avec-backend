@@ -22,6 +22,8 @@ class Commentaire(db.Model):
     id= db.Column(db.Integer,primary_key=True)
     nom=db.Column(db.String(30),nullable=False)
     tel=db.Column(db.String(30),nullable=False)
+    message=db.Column(db.String(500),nullable=False)
+    date_post=db.Column(db.DateTime,default=datetime.utcnow)
 
 def init_base():
     with app.app_context():#contexte d'application pour savoir quelle application appeler
@@ -95,7 +97,7 @@ def net_prime():
 @app.route("/Contact",methods=['POST','GET'])
 def contacts():
     if request.method =="POST":
-        nom= request.form.get('nom',None)
+        nom= request.form.get('nom')
         tel = request.form['tel']
         message= request.form['message']
         next_page=request.args.get("next")
