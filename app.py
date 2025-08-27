@@ -18,7 +18,7 @@ class Utilisateurs(db.Model):#creation d'une table dans la db model represente u
     def __repr__(self):
             return f"base {self.nom}"
 
-class Utilisateurs(db.Model):
+class Commentaire(db.Model):
     id= db.Column(db.Integer,primary_key=True)
     nom=db.Column(db.String(30),nullable=False)
     tel=db.Column(db.String(30),nullable=False)
@@ -92,8 +92,17 @@ def prime_video():
 def net_prime():
     return render_template("netflix_prime.html", session=session)
 
-@app.route("/Contact")
+@app.route("/Contact",methods=['POST','GET'])
 def contacts():
+    if request.method =="POST":
+        nom= request.form.get('nom',None)
+        tel = request.form['tel']
+        message= request.form['message']
+        next_page=request.args.get("next")
+        nouveau_commentaire = Commentaire(nom=nom, tel=tel,message=message)
+        db.session.add(nouveau_commentaire)
+        db.session.commit()
+        return redirect(next_page or url_for("accueil"))
     return render_template("contact.html")
 
 if __name__=='__main__':

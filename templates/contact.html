@@ -95,8 +95,8 @@
         <p>Vous avez une question, une suggestion ou un partenariat ?  
         Remplissez le formulaire ci-dessous, nous vous répondrons rapidement.</p>
 
-        <form  class="contact-form">
-            <input type="text" name="name" placeholder="Votre nom" required>
+        <form  class="contact-form" action="{{url_for('contacts')}}" method="POST">
+            <input type="text" name="nom" placeholder="Votre nom" required>
             <input type="number" name="tel" placeholder="numero de portable" required>
             <textarea name="message" rows="5" placeholder="Votre message" required></textarea>
             <div class="button">
