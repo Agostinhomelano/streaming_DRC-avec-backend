@@ -1,0 +1,301 @@
+.of{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-around;
+    gap: 20px;
+}
+.tele{
+    width: 100%;
+    height: 100vh;
+    text-align: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.tele img{
+    height: 100%;
+    width: 100%;
+}
+.of1{
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+    gap: 50px;
+    width: 100%;
+    height: 100vh;
+}
+.tele-p{
+    width: 100%;
+}
+.titre{
+    width: 100%;
+    gap: 20px;
+    padding-left: 30px;
+}
+.titre h2{
+    width: 100%;
+    font-size: 50px;
+    color: rgba(0, 169, 225, 0.909);
+    margin-bottom: 10px;
+}
+.titre h3{
+    font-size: 25px;
+}
+.titre p{
+    font-size: 20px;
+}
+.titre p span{
+    color: red;
+    font-weight: bolder;
+    font-size: 30px;
+}
+.titre ul{
+    margin-left: 30px;
+}
+.titre ul li{
+    font-size: 25px;
+}
+aside{
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+    gap: 200px;
+    padding: 20px;
+    background-color: rgba(0, 169, 225, 0.909);
+}
+.cont{
+    width: 50%;
+    padding-left: 50px;
+}
+.cont h2{
+    font-size: 40px;
+    color: rgb(1,1,50);
+}
+.cont p{
+    font-size: 25px;
+    margin-top: 10px;
+    color: white;
+}
+.img2{
+    width: 50%;
+    overflow: hidden;
+}
+.img2 img{
+    width: 100%;
+    height: 100%;
+    text-align: center;
+    
+}
+.h1{
+    text-align: center;
+    margin-top: 20px;
+    margin-bottom: 20px;
+}
+.abonement_grie{
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+    flex-wrap: wrap;
+    gap: 20px;
+    
+}
+.offre{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-evenly;
+    background-color: rgba(0, 169, 225, 0.909);
+    width: 300px;
+    height: 350px;
+    border-radius: 20px;
+}
+
+.offre img{
+    width: 150px;
+    height: 150px;
+    border-radius: 20px;
+}
+.offre p{
+    font-size: 30px;
+}
+.offre p span{
+    color: rgb(1, 1, 36);
+    font-size: bolder;
+    font-weight: bolder;
+}
+.offre:hover{
+    transform: scale(1.05);
+}
+.btn_3 {
+  border: 1px solid #fff;
+  background: rgba(0, 169, 225, 0.909);
+  color: #fff;
+  padding: 10px 20px;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: background 0.2s, color 0.2s;
+  text-decoration: none;
+}
+.btn_3:hover {
+  background: white;
+  color: rgb(1,1,50);
+  border: none;
+}
+.achat{
+    background-color: rgb(1, 1, 50);
+}
+@media (max-width:992px) {
+    .of{
+        padding: 20px;
+    }
+    .of1{
+        height: 50vh;
+        padding: 0;
+        gap: 20px;
+        width: 100%;
+    }
+    .tele-p{
+        width: 100%;
+    }
+    .tele-p img{
+        width: 100%;
+    }
+    .tele{
+        height: 50vh;
+    }
+    .titre{
+        width: 100%;
+    }
+    .titre h2{
+        font-size: 35px;
+    }
+    .of1{
+        height: 100%;
+        gap: 0;
+        display: grid;
+        grid-template-rows: auto;
+        grid-template-columns: auto;
+        grid-template-areas: "element2"
+                            "element1";
+    }
+    .tele-p{grid-area:element1;}
+    .titre{grid-area: element2;}
+    aside{
+        padding: 20px;
+        gap: 50px;
+    }
+    aside{
+        display: grid;
+        grid-template-rows: auto;
+        grid-template-columns: auto;
+        grid-template-areas: "element2"
+                            "element1";
+    }
+    .img2{grid-area:element1;}
+    .cont{grid-area: element2;}
+    .img2{
+        width: 100%;
+    }
+    .cont{
+        width: 100%;
+        padding: 0;
+    }
+    .cont h2{
+        font-size: 40px;
+    }
+    .offre{
+        width: 300px;
+        height: 350px;
+    }
+    .offre img{
+        width:200px;
+        height: auto;
+    }
+    .offre p{
+        font-size: 30px;
+    }
+}
+@media (max-width:800px) {
+    .tele{
+        height: 40vh;
+        width: 100%;
+    }
+    .offre{
+        width: 200px;
+        height: 200px;
+    }
+    .offre img{
+        border-radius: 10px;
+        width:60px;
+    }
+    .offre p{
+        font-size: 20px;
+    }
+}
+@media (max-width:500px) {
+    .of{
+        flex-direction: column;
+        align-items: center;
+        height: 120vh;
+        padding:0 ;
+    }
+    .tele{
+        width: 100%;
+    }
+    .titre{
+        width: 100%;
+    }
+    .tele-p{
+    width: 100%;
+    }
+    .titre h3{
+        font-size: 20px;
+    }
+    .of1{
+        height: 100%;
+        gap: 0;
+        display: grid;
+        grid-template-rows: auto;
+        grid-template-columns: auto;
+        grid-template-areas: "element2"
+                            "element1";
+    }
+    .tele-p{grid-area:element1;}
+    .titre{grid-area: element2;}
+    aside{
+        display: grid;
+        grid-template-rows: auto;
+        grid-template-columns: auto;
+        grid-template-areas: "element2"
+                            "element1";
+    }
+    .img2{grid-area:element1;}
+    .cont{grid-area: element2;}
+    .img2{
+        width: 100%;
+    }
+    .cont{
+        width: 100%;
+        padding: 0;
+    }
+    .abonement_grie{
+        flex-direction: column;
+        align-items: center;
+        justify-content: space-around;
+        gap: 20px;
+    }
+    .offre{
+        width: 60%;
+        height: auto;
+        padding: 20px;
+        gap: 10px;
+    }
+    .offre img{
+        width: 200px;
+        height: auto;
+    }
+    .offre p{
+        font-size: 30px;
+    }
+}

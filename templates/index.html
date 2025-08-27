@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Streaming RDC</title>
+  <link rel="stylesheet" href="{{url_for('static',filename='css/style.css')}}">
+</head>
+<body>
+  <!-- HEADER -->
+  <nav>
+    <div class="container-fluid">
+      <!-- Logo -->
+      <div class="container-logo">
+        <img class="logo_stream2" src="{{url_for('static',filename='image/img12.jpg')}}" alt="">
+        <a href="#" class="site-title">STREAMING RDC</a>
+      </div>
+      <!-- Menu burger -->
+      <button class="burger" id="burgerBtn" aria-label="Ouvrir le menu">&#9776;</button>
+      <!-- Menu principal -->
+      <div class="menu" id="menuNav">
+        <ul>
+          <li><a class="a" href="{{url_for('netflix')}}">Netflix</a></li>
+          <li><a class="b" href="{{url_for('prime_video')}}">Prime video</a></li>
+          <li><a class="c" href="{{url_for('iptv')}}">IPTV</a></li>
+          <li><a class="d" href="#">Mon abonnements</a></li>
+          <li><a class="d" href="{{url_for('contacts')}}">Contact</a></li>
+        </ul>
+        {% if session.nom %}
+        <div class="menu-btns">
+          <a href="{{url_for('deconnexion')}}"><button class="btn">Deconnexion</button></a>
+        </div>
+        {% else %}
+        <div class="menu-btns">
+          <a href="{{url_for('inscription')}}"><button class="btn">Connexion</button></a>
+        </div>
+        {% endif %}
+      </div>
+    </div>
+  </nav>
+
+  <!-- HERO -->
+  <section class="hero">
+    <h1>Regardez vos films et séries préférés, partout en RDC !</h1>
+  </section>
+
+  <!-- CATEGORIES -->
+  <section class="categories">
+    <h2>Films populaires</h2>
+    <div class="row">
+      <div class="col-md-3"><div class="card"><img src="{{url_for('static',filename='image/films1.jpg')}}" alt=""></div></div>
+      <div class="col-md-3"><div class="card"><img src="{{url_for('static',filename='image/films2.jpg')}}" alt=""></div></div>
+      <div class="col-md-3"><div class="card"><img src="{{url_for('static',filename='image/films3.jpg')}}" alt=""></div></div>
+      <div class="col-md-3"><div class="card"><img src="{{url_for('static',filename='image/films4.jpg')}}" alt=""></div></div>
+    </div>
+  </section>
+
+  <!-- ABONNEMENTS -->
+  <section class="abonnements">
+    <h2>Nos abonnements</h2>
+    <div class="row">
+      <div class="col-md-4">
+        <div class="card border-success">
+          <h3>Netflix</h3>
+          <p>Accès complet</p>
+          <p class="fw-bold">$4 / mois</p>
+          <button class="btn btn-success3"><a href="{{url_for('netflix')}}">En savoir plus</a></button>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="card border-success">
+          <h3>Prime video</h3>
+          <p>Accès complet</p>
+          <p class="fw-bold">$3 / mois</p>
+          <button class="btn btn-success3"><a href="{{url_for('prime_video')}}">En savoir plus</a></button>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="card border-success">
+          <h3>IPTV</h3>
+          <p>Accès complet</p>
+          <p class="fw-bold">$20 / mois</p>
+          <button class="btn btn-success3"><a href="{{url_for('iptv')}}">En savoir plus</a></button>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="card border-success np">
+          <h3>Netflix & Prime vidéo</h3>
+          <p>Accès complet</p>
+          <p class="fw-bold">$6,05 / mois</p>
+          <button class="btn btn-success3"><a href="{{url_for('net_prime')}}">En savoir plus</a></button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer>
+    <p>© 2025 Streaming RDC | Tous droits réservés | Agostinhomelano developement</p>
+  </footer>
+
+  <script src="{{url_for('static',filename='js/index.js')}}"></script>
+</body>
+</html>

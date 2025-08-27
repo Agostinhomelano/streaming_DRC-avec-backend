@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Streaming RDC</title>
+  <link rel="stylesheet" href="{{url_for('static',filename='css/style.css')}}">
+  <link rel="stylesheet" href="{{url_for('static',filename='css/prime.css')}}">
+</head>
+<body>
+  <!-- HEADER -->
+  <nav>
+    <div class="container-fluid">
+      <!-- Logo -->
+      <div class="container-logo">
+        <img class="logo_stream2" src="{{url_for('static',filename='image/img12.jpg')}}" alt="">
+        <a href="#" class="site-title">STREAMING RDC</a>
+      </div>
+      <!-- Menu burger -->
+      <button class="burger" id="burgerBtn" aria-label="Ouvrir le menu">&#9776;</button>
+      <!-- Menu principal -->
+      <div class="menu" id="menuNav">
+        <ul>
+        <li><a class="d" href="{{url_for('accueil')}}">Acceuil</a></li>
+        <li><a class="c" href="{{url_for('iptv')}}">IPTV</a></li>
+        <li><a class="a" href="{{url_for('netflix')}}">Netflix</a></li>
+        <li><a class="d" href="#">Mon abonnements</a></li>
+        <li><a class="d" href="#">Contact</a></li>
+        </ul>
+        {% if session.nom %}
+        <div class="menu-btns">
+          <a href="{{url_for('deconnexion')}}"><button class="btn_3">Deconnexion</button></a>
+        </div>
+        {% else %}
+        <div class="menu-btns">
+          <a href="{{url_for('inscription')}}"><button class="btn_3">Connexion</button></a>
+        </div>
+        {% endif %}
+      </div>
+    </div>
+  </nav>
+  <section class="of">
+    <div class="tele"><img src="{{url_for('static',filename='image/img19.jpg')}}" alt=""></div>
+    <div class="of1">
+        <div class="titre">
+            <h2>Abonnements Prime vidéo au meilleurs prix</h2>
+            <p>Profitez de vos meilleurs fils et serie prime video au meilleurs prix</p>
+            <p>sur vos smart phone et votre smart tv</p>
+            <h3>suivez en toute securite vos :</h3>
+            <ul>
+                <li>films</li>
+                <li>series</li>
+                <li>films enfants</li>
+                <li>dessins animes</li>
+                <li>animes</li>
+                <li>documentaires...</li>
+            </ul>
+        </div>
+        <div class="tele-p"><img src="{{url_for('static',filename='image/img25.png')}}" alt=""></div>
+    </div>  
+  </section>
+  <aside>
+    <div class="cont">
+      <h2>Profitez de la meilleur offre d'abonnements a un prix reduit <h2>
+      <p> prime video marche sur tout types d'ecrants</p>
+      <p>En companie de votre famille est amis a des tres petit prix</p>
+      <p>prime video a ces prix ! ozui wapi?</p>
+    </div>
+    <div class="img2">
+      <img src="{{url_for('static',filename='image/img20.png')}}" alt="">
+    </div>
+  </aside>
+  <h1 class="h1">Nos Abonnements</h1>
+  <div class="abonement_grie">
+    <div class="offre">
+      <img src="{{url_for('static',filename='image/img22.png')}}" alt="">
+      <p>classique</p>
+      <p>1 mois</p>
+      <p>prix:<span>3$</span></p>
+      <a class="btn_3 achat" href="#">Acheter</a>
+    </div>
+    <div class="offre">
+      <img src="{{url_for('static',filename='image/img22.png')}}" alt="">
+      <p>Fidélité</p>
+      <p>2 mois</p>
+      <p>prix:<span>5,5$</span></p>
+      <a class="btn_3 achat" href="#">Acheter</a>
+    </div>
+    <div class="offre">
+      <img src="{{url_for('static',filename='image/img22.png')}}" alt="">
+      <p>Economie</p>
+      <p>3 mois</p>
+      <p>prix:<span>8.5$</span></p>
+      <a class="btn_3 achat" href="#">Acheter</a>
+    </div>
+    <div class="offre">
+      <img src="{{url_for('static',filename='image/img22.png')}}" alt="">
+      <p>VIP</p>
+      <p>6 mois</p>
+      <p>prix:<span>15$</span></p>
+      <a class="btn_3 achat" href="#">Acheter</a>
+    </div>
+  </div>
+  <!-- FOOTER -->
+  <footer>
+    <p>© 2025 Streaming RDC | Tous droits réservés | Agostinhomelano developement</p>
+  </footer>
+
+  <script src="{{url_for('static',filename='js/index.js')}}"></script>
+</body>
+</html>

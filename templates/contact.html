@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contact - Streaming DRC</title>
+    <link rel="stylesheet" href="{{url_for('static',filename='css/style.css')}}"> <!-- garde ton CSS existant -->
+    <style>
+        /* Style spécifique contact */
+        .contact-container {
+            max-width: 600px;
+            margin: 80px auto;
+            padding: 30px;
+            background: rgba(0, 0, 0, 0.7);
+            border-radius: 15px;
+            color: white;
+            text-align: center;
+        }
+        .contact-container h1 {
+            margin-bottom: 20px;
+            font-size: 28px;
+            color: rgb(117, 245, 124); /* couleur Netflix */
+        }
+        .contact-container p {
+            margin-bottom: 20px;
+            font-size: 16px;
+            color: #ddd;
+        }
+        .contact-form input,
+        .contact-form textarea {
+            width: 100%;
+            padding: 12px;
+            margin: 10px 0;
+            border-radius: 8px;
+            border: none;
+            outline: none;
+        }
+        .contact-form button {
+            background: rgb(117, 245, 124);
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: 0.3s;
+        }
+        .contact-form button:hover {
+            background:white;
+            color: rgb(117, 245, 124);
+        }
+        .button{
+            display: flex;
+            align-items: center;
+            justify-content: space-around;
+        }
+        .button a{
+            text-decoration: none;
+            color:white ;
+            background-color: rgb(117, 245, 124);
+            padding: 12px 20px;
+            font-size: 16px;
+            border-radius: 8px;
+        }
+        .button a:hover{
+            background:white;
+            color: rgb(117, 245, 124);
+        }
+        .contact-info {
+            margin-top: 30px;
+            font-size: 15px;
+            color: #aaa;
+        }
+        .contact-info a {
+            color: rgb(117, 245, 124);
+            text-decoration: none;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Navbar (tu peux copier celle de ton site principal) -->
+    <!-- <header>
+        <nav>
+            <ul>
+                <li><a class="d" href="{{url_for('accueil')}}">Acceuil</a></li>
+                <li><a class="d" href="{{url_for('contacts')}}">Contact</a></li>
+            </ul>
+        </nav>
+    </header> -->
+
+    <!-- Section Contact -->
+    <section class="contact-container">
+        <h1>Contactez-nous</h1>
+        <p>Vous avez une question, une suggestion ou un partenariat ?  
+        Remplissez le formulaire ci-dessous, nous vous répondrons rapidement.</p>
+
+        <form  class="contact-form">
+            <input type="text" name="name" placeholder="Votre nom" required>
+            <input type="number" name="tel" placeholder="numero de portable" required>
+            <textarea name="message" rows="5" placeholder="Votre message" required></textarea>
+            <div class="button">
+                <button type="submit">Envoyer</button>
+                <a href="{{url_for('accueil')}}">Acceuil</a>
+            </div>
+            
+        </form>
+
+        <div class="contact-info">
+            <p>📧 Email : <a href="mailto:htshimbela@gmail.com">htshimbela@gmail.com</a></p>
+            <p>📱 WhatsApp : <a href="https://wa.me/243813862663" target="_blank">+243 81 38 62663</a></p>
+            <p>🌍 Kinshasa, République Démocratique du Congo</p>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <p>&copy; 2025 Streaming DRC - Tous droits réservés.</p>
+    </footer>
+
+</body>
+</html>

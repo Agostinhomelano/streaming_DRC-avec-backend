@@ -1,0 +1,227 @@
+.of{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-around;
+    gap: 20px;
+}
+.tele{
+    width: 100%;
+    height: 100vh;
+    text-align: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.tele img{
+    height: 100%;
+    width: 100%;
+    /* object-fit: contain; */
+}
+
+.titre{
+    width: 100%;
+    padding: 20px;
+}
+.titre h2{
+    width: 100%;
+    font-size: 50px;
+    color: red;
+}
+.titre h3{
+    font-size: 25px;
+}
+.titre p{
+    font-size: 20px;
+}
+.titre p span{
+    color: red;
+    font-weight: bolder;
+    font-size: 30px;
+}
+.titre ul{
+    margin-left: 30px;
+}
+.titre ul li{
+    font-size: 25px;
+}
+aside{
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+    gap: 200px;
+    background-color: rgb(36, 36, 36);
+    padding: 20px;
+}
+.cont{
+    width: 50%;
+    padding-left: 50px;
+}
+.cont h2{
+    font-size: 40px;
+    color: red;
+}
+.cont p{
+    font-size: 25px;
+    margin-top: 10px;
+    color: white;
+}
+.img2{
+    width: 50%;
+    overflow: hidden;
+}
+.img2 img{
+    width: 100%;
+    height: 100%;
+    text-align: center;
+    border-radius: 50%;
+}
+.h1{
+    text-align: center;
+    margin-top: 20px;
+    margin-bottom: 20px;
+}
+.abonement_grie{
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+    flex-wrap: wrap;
+    gap: 20px;
+    
+}
+.offre{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-evenly;
+    background-color:rgb(36, 36, 36) ;
+    width: 300px;
+    height: 350px;
+    border-radius: 20px;
+}
+
+.offre img{
+    width: 200px;
+    border-radius: 20px;
+}
+.offre p{
+    font-size: 30px;
+}
+.offre p span{
+    color: red;
+}
+.offre:hover{
+    transform: scale(1.05);
+}
+.btn_2 {
+  border: 1px solid #fff;
+  background: red;
+  color: #fff;
+  padding: 10px 20px;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: background 0.2s, color 0.2s;
+  text-decoration: none;
+}
+.btn_2:hover {
+  background: white;
+  color: red;
+  border: none;
+}
+@media (max-width:992px) {
+    .of{
+        padding: 20px;
+    }
+    .tele{
+        height: 50vh;
+    }
+    .titre h2{
+        font-size: 35px;
+    }
+    aside{
+        padding: 20px;
+        gap: 50px;
+    }
+    .cont h2{
+        font-size: 40px;
+    }
+    .offre{
+        width: 300px;
+        height: 350px;
+    }
+    .offre img{
+        width:200px;
+    }
+    .offre p{
+        font-size: 30px;
+    }
+}
+@media (max-width:800px) {
+    .tele{
+        height: 40vh;
+        width: 100%;
+    }
+    .offre{
+        width: 200px;
+        height: 200px;
+    }
+    .offre img{
+        border-radius: 10px;
+        width:60px;
+    }
+    .offre p{
+        font-size: 20px;
+    }
+}
+@media (max-width:500px) {
+    .of{
+        flex-direction: column;
+        align-items: center;
+        height: 100vh;
+        padding:0 ;
+    }
+    .tele{
+        width: 100%;
+    }
+    .titre{
+        width: 100%;
+    }
+    .titre h3{
+        font-size: 20px;
+    }
+    aside{
+        display: grid;
+        grid-template-rows: auto;
+        grid-template-columns: auto;
+        grid-template-areas: "element1"
+                            "element2";
+    }
+    .img2{grid-area:element1;}
+    .cont{grid-area: element2;}
+    .img2{
+        width: 100%;
+    }
+    .cont{
+        width: 100%;
+        padding: 0;
+    }
+    .abonement_grie{
+        flex-direction: column;
+        align-items: center;
+        justify-content: space-around;
+        gap: 20px;
+    }
+    .offre{
+        width: 60%;
+        height: auto;
+        padding: 20px;
+        gap: 10px;
+    }
+    .offre img{
+        width: 200px;
+        height: 100px;
+    }
+    .offre p{
+        font-size: 30px;
+    }
+}

@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Page d'accueil Streaming</title>
+    <style>
+        /* Reset */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            width: 100%;
+            height: 500px;
+            font-family: Arial, sans-serif;
+            background-color: #1f1e1e;
+            color: #fff;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            background: url(/static/image/backgroud.jpg) no-repeat center center/cover;
+        }
+
+        .img img{
+            width: 300px;
+            height: 300px;
+            border-radius: 50%;
+        }
+        .hero {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content:stretch;
+            align-items: center;
+            text-align: center;
+            padding: 20px;
+        }
+
+        .hero h2 {
+            font-size: 50px;
+            margin-bottom: 20px;
+            color:rgb(84, 222, 90) ;
+            text-shadow: 2px 2px 5px black;
+        }
+
+        .hero p {
+            font-size: 20px;
+            max-width: 600px;
+            margin-bottom: 30px;
+        }
+
+        .btn {
+            background: rgb(84, 222, 90);
+            color: white;
+            padding: 12px 25px;
+            border: none;
+            font-size: 18px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: 0.3s;
+            text-decoration: none;
+        }
+
+        .btn:hover {
+            background: white;
+            color: black;
+        }
+        @media (max-width: 900px){
+            body{
+                min-height: 1200px;
+            }
+        }
+        @media (max-width: 500px) {
+            body{
+                height: 700px;
+                padding-bottom: 20px;
+            }
+            .hero h2{
+                font-size: 30px;
+            }
+            .hero p{
+                font-size: 15px;
+            }
+            .img img{
+                width: 100%;
+                margin-top: 50px;
+            }
+        }
+        
+    </style>
+</head>
+<body>
+    <section class="hero">
+        <div class="img"><img src="{{url_for('static',filename='image/logo_stream.png ')}}" alt=""></div>
+        <h2>Streaming RDC ton cinéma est à domicile</h2>
+        <p>Regardez tout vos films, séries et documentaires en illimité sur toutes les plateformes (Netflix,Prime video et IPTV).<br> et beneficiez de nos meilleurs offres a des prix d'exceptions.</p>
+        <p>Avec un payement hautement sécurisé </p>
+        <a class="btn" href="{{url_for('accueil')}}">Commencer Maintenant</a>
+    </section>
+
+</body>
+</html>
