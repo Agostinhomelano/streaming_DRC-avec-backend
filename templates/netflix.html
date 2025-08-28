@@ -24,8 +24,8 @@
         <li><a class="d" href="{{url_for('accueil')}}">Acceuil</a></li>
         <li><a class="c" href="{{url_for('iptv')}}">IPTV</a></li>
         <li><a class="b" href="{{url_for('prime_video')}}">Prime video</a></li>
-        <li><a class="d" href="#">Mon abonnements</a></li>
-        <li><a class="d" href="#">Contact</a></li>
+        <li><a class="d" href="{{url_for('mon_abonnement')}}">Mon abonnements</a></li>
+        <li><a class="d" href="{{url_for('contacts')}}">Contact</a></li>
         </ul>
         {% if session.nom %}
         <div class="menu-btns">

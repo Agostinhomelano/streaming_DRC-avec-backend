@@ -94,6 +94,12 @@ def prime_video():
 def net_prime():
     return render_template("netflix_prime.html", session=session)
 
+@app.route("/mon_abonnement")
+def mon_abonnement():
+    if 'nom' not in session:
+        return redirect(url_for('connexion', next=url_for('mon_abonnement')))
+    return render_template("mon_abonnement.html", session=session)
+
 @app.route("/Contact",methods=['POST','GET'])
 def contacts():
     if request.method =="POST":
