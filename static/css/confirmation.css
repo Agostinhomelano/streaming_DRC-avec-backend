@@ -1,0 +1,38 @@
+body {
+  background: url("../image/backgroud.jpg") no-repeat center center/cover;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-family: Arial, sans-serif;
+}
+
+.confirmation-container {
+  background: rgba(255, 255, 255, 0.174);
+  padding: 2rem 3rem;
+  border-radius: 16px;
+  box-shadow: 0 4px 24px rgba(0,0,0,0.12);
+  text-align: center;
+  color: #151515;
+}
+
+.confirmation-container h1 {
+  color: #00A8E1;
+  margin-bottom: 1rem;
+}
+
+.btn-retour {
+  display: inline-block;
+  margin-top: 2rem;
+  padding: 10px 24px;
+  background: #e50914;
+  color: #fff;
+  border-radius: 6px;
+  text-decoration: none;
+  font-weight: bold;
+  transition: background 0.3s;
+}
+
+.btn-retour:hover {
+  background: #b20710;
+}

@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Confirmation</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/confirmation.css') }}">
+</head>
+<body>
+  <div class="confirmation-container">
+    <h1>Merci pour votre commentaire !</h1>
+    <p>Votre message a bien été envoyé.<br>
+    Nous vous répondrons dans les plus brefs délais.</p>
+    <a href="{{ url_for('accueil') }}" class="btn-retour">Retour à l'accueil</a>
+  </div>
+</body>

@@ -110,8 +110,12 @@ def contacts():
         nouveau_commentaire = Commentaire(nom=nom, tel=tel,message=message)
         db.session.add(nouveau_commentaire)
         db.session.commit()
-        return redirect(next_page or url_for("accueil"))
+        return render_template("confirmation.html")
     return render_template("contact.html")
+
+@app.route("/confirmation")
+def confirmation():
+    return render_template("confirmation.html", session=session)
 
 if __name__=='__main__':
     init_base()
