@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Liste des abonnements - Admin</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/admin.css') }}">
+  <style>
+    .admin-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 2rem 0;
+  background: rgba(255,255,255,0.15);
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+}
+
+.admin-table th, .admin-table td {
+  padding: 0.9rem 1rem;
+  text-align: left;
+}
+
+.admin-table th {
+  background: #00A8E1;
+  color: #fff;
+  font-weight: bold;
+  font-size: 1rem;
+}
+
+.admin-table tr {
+  border-bottom: 1px solid #e50914;
+}
+
+.admin-table tr:last-child {
+  border-bottom: none;
+}
+
+.admin-table td {
+  background: rgba(255,255,255,0.10);
+  color: #222;
+}
+
+.admin-table tr:hover td {
+  background: rgba(224, 9, 20, 0.08);
+}
+
+.btn-admin {
+  display: inline-block;
+  padding: 6px 16px;
+  background: #e50914;
+  color: #fff;
+  border-radius: 6px;
+  text-decoration: none;
+  font-weight: bold;
+  transition: background 0.3s;
+  font-size: 0.95rem;
+}
+
+.btn-admin:hover {
+  background: #b20710;
+}
+  </style>
+</head>
+<body>
+  <div class="admin-container">
+    <h1>Liste des clients</h1>
+    <table class="admin-table">
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Utilisateur</th>
+          <th>Mot de passe</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody>
+        {# Boucle Jinja pour afficher les abonnements #}
+        {% for user in users %}
+        <tr>
+          <td>{{ user.id }}</td>
+          <td>{{ user.nom }}</td>
+          <td>{{ user.mdp }}</td>
+          <td>
+            <form action="{{url_for('supprimer_utilisateur',id=user.id)}}" method="post">
+                <button type="submit" class="btn-admin">Suprimer</button>
+            </form>
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+    <a href="{{ url_for('accueil_admin') }}" class="btn-retour">Retour au tableau de bord</a>
+  </div>

@@ -25,6 +25,13 @@ class Commentaire(db.Model):
     message=db.Column(db.String(500),nullable=False)
     date_post=db.Column(db.DateTime,default=datetime.utcnow)
 
+class Abonnements(db.Model):
+    id= db.Column(db.Integer,primary_key=True)
+    nom=db.Column(db.String(30),nullable=False)
+    service=db.Column(db.String(30),nullable=False)
+    statut=db.Column(db.Boolean, default=False)
+    date_post=db.Column(db.DateTime,default=datetime.utcnow)
+
 def init_base():
     with app.app_context():#contexte d'application pour savoir quelle application appeler
         db.create_all()
@@ -35,7 +42,7 @@ def init_base():
             print("La base contient deja des donnes.")
 @app.route("/")
 def introduction():
-    return render_template("streaming_rdc.html")
+    return render_template("users/streaming_rdc.html")
 
 @app.route("/inscription", methods=["GET", "POST"])
 def inscription():
@@ -43,16 +50,16 @@ def inscription():
         nom=request.form['nom']
         mdp = request.form['mdp']
         if not mdp or not nom:
-            return render_template("inscription.html", erreur="Vous n'avez pas rempli tous les champs", show_register=True)
+            return render_template("users/inscription.html", erreur="Vous n'avez pas rempli tous les champs", show_register=True)
         utilisateur_existant=Utilisateurs.query.filter_by(nom=nom).first()
         if utilisateur_existant:
-            return render_template("inscription.html", erreur="Cet utilisateur existe déjà, veuillez choisir un autre nom.", show_register=True)
+            return render_template("users/inscription.html", erreur="Cet utilisateur existe déjà, veuillez choisir un autre nom.", show_register=True)
         nouvel_utilisateur = Utilisateurs(nom=nom, mdp=mdp)
         db.session.add(nouvel_utilisateur)
         db.session.commit()
         retour = url_for('accueil')
         return redirect(retour)
-    return render_template("inscription.html")
+    return render_template("users/inscription.html")
 
 @app.route("/connexion",methods=["POST","GET"])
 def connexion():
@@ -64,41 +71,41 @@ def connexion():
             session['nom']=utilisateur.nom
             session['id']=utilisateur.id
             next_page=request.args.get("next")
-            return redirect(next_page or url_for("accueil"))
+            return redirect(next_page or url_for("users/accueil"))
         else:
-            return render_template("inscription.html", erreur="Identifiants incorrects", show_register=False)
-    return render_template("inscription.html", show_register=False)
+            return render_template("users/inscription.html", erreur="Identifiants incorrects", show_register=False)
+    return render_template("users/inscription.html", show_register=False)
 
 @app.route("/deconnexion",methods=['POST','GET'])
 def deconnexion():
     session.clear()
-    return redirect(url_for('accueil'))
+    return redirect(url_for('users/accueil'))
 
 @app.route("/Accueil")
 def accueil():
-    return render_template("index.html", session=session)
+    return render_template("users/index.html", session=session)
 
 @app.route("/iptv")
 def iptv():
-    return render_template("iptv.html", session=session)
+    return render_template("users/iptv.html", session=session)
 
 @app.route("/netflix")
 def netflix():
-    return render_template("netflix.html", session=session)
+    return render_template("users/netflix.html", session=session)
 
 @app.route("/Prime video")
 def prime_video():
-    return render_template("prime.html", session=session)
+    return render_template("users/prime.html", session=session)
 
 @app.route("/Netflix et Prime video")
 def net_prime():
-    return render_template("netflix_prime.html", session=session)
+    return render_template("users/netflix_prime.html", session=session)
 
 @app.route("/mon_abonnement")
 def mon_abonnement():
     if 'nom' not in session:
-        return redirect(url_for('connexion', next=url_for('mon_abonnement')))
-    return render_template("mon_abonnement.html", session=session)
+        return redirect(url_for('users/connexion', next=url_for('mon_abonnement')))
+    return render_template("users/mon_abonnement.html", session=session)
 
 @app.route("/Contact",methods=['POST','GET'])
 def contacts():
@@ -107,15 +114,49 @@ def contacts():
         tel = request.form['tel']
         message= request.form['message']
         next_page=request.args.get("next")
-        nouveau_commentaire = Commentaire(nom=nom, tel=tel,message=message)
+        nouveau_commentaire = Commentaire(nom=nom, tel=tel,message=message,next_page=next_page)
         db.session.add(nouveau_commentaire)
         db.session.commit()
-        return render_template("confirmation.html")
-    return render_template("contact.html")
+        return render_template("users/confirmation.html")
+    return render_template("users/contact.html")
 
 @app.route("/confirmation")
 def confirmation():
-    return render_template("confirmation.html", session=session)
+    return render_template("users/confirmation.html", session=session)
+
+@app.route("/admin")
+def accueil_admin():
+    return render_template("admin/index.html")
+
+@app.route("/admin/utilisateurs")
+def list_users():
+    users=Utilisateurs.query.all()
+    return render_template("admin/list_users.html",users=users)
+
+@app.route("/admin/utilisateurs/Supprimer/<int:id>",methods=["POST"])
+def supprimer_utilisateur(id):
+    users=Utilisateurs.query.get(id)
+    if users:
+        db.session.delete(users)
+        db.session.commit()
+    return redirect(url_for("list_users"))
+
+@app.route("/liste_abonnements")
+def list_abonnements():
+    return render_template("admin/list_abonnement.html")
+
+@app.route("/admin/liste_commentaires")
+def liste_commentaires():
+    commentaires=Commentaire.query.all()
+    return render_template("admin/commentaire.html",commentaires=commentaires)
+
+@app.route("/admin/liste_commentaires/Supprimer/<int:id>",methods=["POST" , "GET"])
+def supprimer_commentaire(id):
+    commentaires=Commentaire.query.get(id)
+    if commentaires:
+        db.session.delete(commentaires)
+        db.session.commit()
+    return redirect('admin/liste_commentaires')
 
 if __name__=='__main__':
     init_base()
