@@ -78,15 +78,15 @@
       </thead>
       <tbody>
         {# Boucle Jinja pour afficher les commentaires #}
-        {% for commentaire in commentaires %}
+        {% for c in commentaires %}
             <tr>
-            <td>{{ commentaire.id }}</td>
-            <td>{{ commentaire.nom }}</td>
-            <td>{{ commentaire.tel }}</td>
-            <td>{{ commentaire.message }}</td>
-            <td>{{ commentaire.date_post.strftime('%Y-%m-%d %H:%M') }}</td>
+            <td>{{ c.id }}</td>
+            <td>{{ c.nom }}</td>
+            <td>{{ c.tel }}</td>
+            <td>{{ c.message }}</td>
+            <td>{{ c.date_post.strftime('%Y-%m-%d %H:%M') }}</td>
             <td>
-                <form action="{{ url_for('supprimer_commentaire', id=commentaire.id) }}" methods="post">
+                <form action="{{ url_for('supprimer_commentaire', id=c.id) }}" methods="post">
                     <button type="submit" class="btn-admin">Supprimer</button>
                 </form>
             </td>

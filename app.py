@@ -71,7 +71,7 @@ def connexion():
             session['nom']=utilisateur.nom
             session['id']=utilisateur.id
             next_page=request.args.get("next")
-            return redirect(next_page or url_for("users/accueil"))
+            return redirect(next_page or url_for("accueil"))
         else:
             return render_template("users/inscription.html", erreur="Identifiants incorrects", show_register=False)
     return render_template("users/inscription.html", show_register=False)
@@ -79,9 +79,9 @@ def connexion():
 @app.route("/deconnexion",methods=['POST','GET'])
 def deconnexion():
     session.clear()
-    return redirect(url_for('users/accueil'))
+    return render_template("users/index.html")
 
-@app.route("/Accueil")
+@app.route("/accueil")
 def accueil():
     return render_template("users/index.html", session=session)
 
@@ -104,7 +104,7 @@ def net_prime():
 @app.route("/mon_abonnement")
 def mon_abonnement():
     if 'nom' not in session:
-        return redirect(url_for('users/connexion', next=url_for('mon_abonnement')))
+        return redirect(url_for('connexion', next=url_for('mon_abonnement')))
     return render_template("users/mon_abonnement.html", session=session)
 
 @app.route("/Contact",methods=['POST','GET'])
@@ -113,8 +113,8 @@ def contacts():
         nom= request.form.get('nom')
         tel = request.form['tel']
         message= request.form['message']
-        next_page=request.args.get("next")
-        nouveau_commentaire = Commentaire(nom=nom, tel=tel,message=message,next_page=next_page)
+        # next_page=request.args.get("next"),next_page=next_page
+        nouveau_commentaire = Commentaire(nom=nom, tel=tel,message=message)
         db.session.add(nouveau_commentaire)
         db.session.commit()
         return render_template("users/confirmation.html")
@@ -150,13 +150,13 @@ def liste_commentaires():
     commentaires=Commentaire.query.all()
     return render_template("admin/commentaire.html",commentaires=commentaires)
 
-@app.route("/admin/liste_commentaires/Supprimer/<int:id>",methods=["POST" , "GET"])
+@app.route("/admin/liste_commentaires/supprimer_commentaire/<int:id>",methods=["POST" , "GET"])
 def supprimer_commentaire(id):
     commentaires=Commentaire.query.get(id)
     if commentaires:
         db.session.delete(commentaires)
         db.session.commit()
-    return redirect('admin/liste_commentaires')
+    return redirect(url_for('liste_commentaires'))
 
 if __name__=='__main__':
     init_base()

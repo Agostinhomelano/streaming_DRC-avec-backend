@@ -50,7 +50,7 @@ body {
 }
 
 .admin-card p {
-  color: #333;
+  color: #181818;
   margin-bottom: 1.2rem;
 }
 
@@ -82,4 +82,13 @@ body {
 }
 .btn-retour:hover {
   background: #0077b6;
+}
+footer {
+  background: #111;
+  text-align: center;
+  padding: 20px 0;
+  font-size: 1rem;
+  color: #fff;
+  margin-top: 40px;
+  width: 100%;
 }

@@ -60,6 +60,14 @@
 .btn-admin:hover {
   background: #b20710;
 }
+@media (max-width:992px) {
+  body{
+    height: 120vh;
+  }
+  .admin-container{
+    padding: 10px 8px 20px 5px ;
+  }
+}
   </style>
 </head>
 <body>
@@ -92,3 +100,8 @@
     </table>
     <a href="{{ url_for('accueil_admin') }}" class="btn-retour">Retour au tableau de bord</a>
   </div>
+  <footer>
+    <p>© 2025 Streaming RDC | Tous droits réservés | Agostinhomelano developement</p>
+  </footer>
+</body>
+</html>
