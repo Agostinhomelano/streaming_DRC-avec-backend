@@ -6,95 +6,304 @@
   <title>Liste des commentaires - Admin</title>
   <link rel="stylesheet" href="{{ url_for('static', filename='css/admin.css') }}">
   <style>
+    .admin-container {
+      max-width: 1200px;
+      margin: auto;
+      padding: 20px;
+    }
+
+    h1 {
+      text-align: center;
+      color: #00A8E1;
+      margin-bottom: 20px;
+    }
+
+    /* --- TABLEAU --- */
+    .table-responsive {
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
+      border-radius: 12px;
+      box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+    }
+
     .admin-table {
-  width: 100%;
-  border-collapse: collapse;
-  margin: 2rem 0;
-  background: rgba(255,255,255,0.15);
-  border-radius: 12px;
-  overflow: hidden;
-  box-shadow: 0 2px 12px rgba(0,0,0,0.08);
-}
+      width: 100%;
+      border-collapse: collapse;
+      min-width: 700px;
+    }
 
-.admin-table th, .admin-table td {
-  padding: 0.9rem 1rem;
-  text-align: left;
-}
+    .admin-table th, .admin-table td {
+      padding: 0.9rem 1rem;
+      text-align: left;
+      font-size: 0.95rem;
+      vertical-align: middle;
+    }
 
-.admin-table th {
-  background: #00A8E1;
-  color: #fff;
-  font-weight: bold;
-  font-size: 1rem;
-}
+    .admin-table th {
+      background: #00A8E1;
+      color: #fff;
+      font-weight: bold;
+    }
 
-.admin-table tr {
-  border-bottom: 1px solid #e50914;
-}
+    .admin-table tr {
+      border-bottom: 1px solid #e5e5e5;
+    }
 
-.admin-table tr:last-child {
-  border-bottom: none;
-}
+    .admin-table tr:last-child {
+      border-bottom: none;
+    }
 
-.admin-table td {
-  background: rgba(255,255,255,0.10);
-  color: #222;
-}
+    .admin-table td {
+      background: rgba(255,255,255,0.15);
+    }
 
-.admin-table tr:hover td {
-  background: rgba(224, 9, 20, 0.08);
-}
+    .admin-table tr:hover td {
+      background: rgba(197, 91, 91, 0.329);
+    }
 
-.btn-admin {
-  display: inline-block;
-  padding: 6px 16px;
-  background: #e50914;
-  color: #fff;
-  border-radius: 6px;
-  text-decoration: none;
-  font-weight: bold;
-  transition: background 0.3s;
-  font-size: 0.95rem;
-}
+    /* --- BOUTONS --- */
+    .btn-admin {
+      display: inline-block;
+      padding: 6px 14px;
+      background: #e50914;
+      color: #fff;
+      border-radius: 6px;
+      text-decoration: none;
+      font-weight: bold;
+      transition: 0.3s;
+      font-size: 0.9rem;
+      border: none;
+      cursor: pointer;
+    }
 
-.btn-admin:hover {
-  background: #b20710;
-}
+    .btn-admin:hover {
+      background: #b20710;
+    }
+
+    .btn-retour {
+      display: inline-block;
+      margin-top: 15px;
+      padding: 8px 18px;
+      background: #00A8E1;
+      color: #fff;
+      border-radius: 6px;
+      text-decoration: none;
+      font-weight: bold;
+      transition: 0.3s;
+    }
+
+    .btn-retour:hover {
+      background: #007ea8;
+    }
+
+    td a {
+      text-decoration: none;
+      color: #121212;
+    }
+    td a:hover {
+      color:#e50914;
+    }
+
+    footer {
+      text-align: center;
+      padding: 15px;
+      margin-top: 30px;
+      font-size: 0.9rem;
+      background: #222;
+      color: #fff;
+    }
+
+    /* --- MODALE (overlay) --- */
+    .modal {
+      display: none;
+      position: fixed;
+      z-index: 9999;
+      left: 0; top: 0;
+      width: 100%; height: 100%;
+      background: rgba(0,0,0,0.6);
+      justify-content: center;
+      align-items: center;
+    }
+
+    .modal-content {
+      background: #fff;
+      padding: 20px;
+      border-radius: 10px;
+      width: 90%;
+      max-width: 400px;
+      text-align: center;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+      animation: fadeIn 0.3s ease-in-out;
+    }
+
+    .modal h2 {
+      margin-bottom: 15px;
+      color: #e50914;
+    }
+
+    .modal button {
+      padding: 10px 20px;
+      border: none;
+      border-radius: 6px;
+      margin: 10px;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: 0.3s;
+    }
+
+    .btn-cancel {
+      background: #ccc;
+    }
+    .btn-cancel:hover {
+      background: #aaa;
+    }
+
+    .btn-confirm {
+      background: #e50914;
+      color: #fff;
+    }
+    .btn-confirm:hover {
+      background: #b20710;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: scale(0.8); }
+      to { opacity: 1; transform: scale(1); }
+    }
+
+    /* --- RESPONSIVE --- */
+    @media (max-width: 768px) {
+      .admin-table, .admin-table thead, .admin-table tbody, .admin-table th, .admin-table td, .admin-table tr {
+        display: block;
+        width: 100%;
+      }
+
+      .admin-table thead {
+        display: none;
+      }
+
+      .admin-table tr {
+        margin-bottom: 15px;
+        border-radius: 10px;
+        background:rgba(255,255,255,0.15);;
+        box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+        padding: 10px;
+        width: 98%;
+      }
+
+      .admin-table td {
+        display: flex;
+        justify-content:first baseline;
+        align-items: center;
+        padding: 10px;
+        gap: 20px;
+        font-size: 0.9rem;
+        border: none;
+        border-bottom: 1px solid #f0f0f079;
+        vertical-align: middle;
+        text-align: center;
+        width: 96.5%;
+      }
+
+      .admin-table td:last-child {
+        border-bottom: none;
+      }
+
+      .admin-table td::before {
+        content: attr(data-label);
+        font-weight: bold;
+        color: #00A8E1;
+      }
+    }
+    @media (max-width: 500px) {
+      .admin-table, .admin-table thead, .admin-table tbody, .admin-table th, .admin-table td, .admin-table tr {
+        width: 95%;
+      }
+      .admin-table tr{
+        width: 60%;
+      }}
   </style>
 </head>
 <body>
   <div class="admin-container">
     <h1>Liste des commentaires</h1>
-    <table class="admin-table">
-      <thead>
-        <tr>
-          <th>ID</th>
-          <th>Nom</th>
-          <th>Téléphone</th>
-          <th>Message</th>
-          <th>Date</th>
-          <th>Actions</th>
-        </tr>
-      </thead>
-      <tbody>
-        {# Boucle Jinja pour afficher les commentaires #}
-        {% for c in commentaires %}
-            <tr>
-            <td>{{ c.id }}</td>
-            <td>{{ c.nom }}</td>
-            <td>{{ c.tel }}</td>
-            <td>{{ c.message }}</td>
-            <td>{{ c.date_post.strftime('%Y-%m-%d %H:%M') }}</td>
+    <div class="table-responsive">
+      <table class="admin-table">
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Nom</th>
+            <th>Téléphone</th>
+            <th>Message</th>
+            <th>Date</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for c in commentaires %}
+          <tr>
+            <td data-label="ID">{{ c.id }}</td>
+            <td data-label="Nom">{{ c.nom }}</td>
+            <td data-label="Téléphone"><a href="https://wa.me/{{ c.tel }}" target="_blank">{{ c.tel }}</a></td>
+            <td data-label="Message">{{ c.message }}</td>
+            <td data-label="Date">{{ c.date_post.strftime('%Y-%m-%d %H:%M') }}</td>
             <td>
-                <form action="{{ url_for('supprimer_commentaire', id=c.id) }}" methods="post">
-                    <button type="submit" class="btn-admin">Supprimer</button>
-                </form>
+              <form action="{{ url_for('supprimer_commentaire', id=c.id) }}" method="post" class="delete-form">
+                <button type="submit" class="btn-admin">Supprimer</button>
+              </form>
             </td>
-            </tr>
-        {% endfor %}
-      </tbody>
-    </table>
-    <a href="{{ url_for('accueil_admin') }}" class="btn-retour">Retour</a>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+
+    <!-- MODALE -->
+    <div class="modal" id="confirmModal">
+      <div class="modal-content">
+        <h2>⚠ Confirmation</h2>
+        <p>Voulez-vous vraiment supprimer ce commentaire ?</p>
+        <button class="btn-cancel">Annuler</button>
+        <button class="btn-confirm">Supprimer</button>
+      </div>
+    </div>
+
+    <a href="{{ url_for('accueil_admin') }}" class="btn-retour">Retour au tableau de bord</a>
   </div>
+
+  <footer>
+    <p>© 2025 Streaming RDC | Tous droits réservés | Agostinhomelano développement</p>
+  </footer>
+
+  <script>
+    const modal = document.getElementById("confirmModal");
+    const btnCancel = document.querySelector(".btn-cancel");
+    const btnConfirm = document.querySelector(".btn-confirm");
+    let formToSubmit = null;
+
+    // Pour chaque bouton supprimer
+    document.querySelectorAll(".delete-form").forEach(form => {
+      const btnDelete = form.querySelector(".btn-admin");
+
+      btnDelete.addEventListener("click", (e) => {
+        e.preventDefault();
+        formToSubmit = form;
+        modal.style.display = "flex";
+      });
+    });
+
+    // Fermer si on clique sur Annuler
+    btnCancel.addEventListener("click", () => {
+      modal.style.display = "none";
+      formToSubmit = null;
+    });
+
+    // Valider et envoyer le formulaire si on clique sur Confirmer
+    btnConfirm.addEventListener("click", () => {
+      if (formToSubmit) {
+        formToSubmit.submit();
+      }
+    });
+  </script>
 </body>
 </html>

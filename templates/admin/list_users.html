@@ -60,6 +60,64 @@
 .btn-admin:hover {
   background: #b20710;
 }
+/* --- MODALE (overlay) --- */
+    .modal {
+      display: none;
+      position: fixed;
+      z-index: 9999;
+      left: 0; top: 0;
+      width: 100%; height: 100%;
+      background: rgba(0,0,0,0.6);
+      justify-content: center;
+      align-items: center;
+    }
+
+    .modal-content {
+      background: #fff;
+      padding: 20px;
+      border-radius: 10px;
+      width: 90%;
+      max-width: 400px;
+      text-align: center;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+      animation: fadeIn 0.3s ease-in-out;
+    }
+
+    .modal h2 {
+      margin-bottom: 15px;
+      color: #e50914;
+    }
+
+    .modal button {
+      padding: 10px 20px;
+      border: none;
+      border-radius: 6px;
+      margin: 10px;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: 0.3s;
+    }
+
+    .btn-cancel {
+      background: #ccc;
+    }
+    .btn-cancel:hover {
+      background: #aaa;
+    }
+
+    .btn-confirm {
+      background: #e50914;
+      color: #fff;
+    }
+    .btn-confirm:hover {
+      background: #b20710;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: scale(0.8); }
+      to { opacity: 1; transform: scale(1); }
+    }
+
 @media (max-width:992px) {
   body{
     height: 120vh;
@@ -79,6 +137,7 @@
           <th>ID</th>
           <th>Utilisateur</th>
           <th>Mot de passe</th>
+          <th>activités</th>
           <th></th>
         </tr>
       </thead>
@@ -89,8 +148,9 @@
           <td>{{ user.id }}</td>
           <td>{{ user.nom }}</td>
           <td>{{ user.mdp }}</td>
+          <td>Actif</td>
           <td>
-            <form action="{{url_for('supprimer_utilisateur',id=user.id)}}" method="post">
+            <form action="{{url_for('supprimer_utilisateur',id=user.id)}}" method="post" class="delete-form">
                 <button type="submit" class="btn-admin">Suprimer</button>
             </form>
           </td>
@@ -100,8 +160,47 @@
     </table>
     <a href="{{ url_for('accueil_admin') }}" class="btn-retour">Retour au tableau de bord</a>
   </div>
+  <!-- MODALE -->
+    <div class="modal" id="confirmModal">
+      <div class="modal-content">
+        <h2>⚠ Confirmation</h2>
+        <p>Voulez-vous vraiment supprimer ce utilisateur ?</p>
+        <button class="btn-cancel">Annuler</button>
+        <button class="btn-confirm">Supprimer</button>
+      </div>
+    </div>
   <footer>
     <p>© 2025 Streaming RDC | Tous droits réservés | Agostinhomelano developement</p>
   </footer>
+  <script>
+    const modal = document.getElementById("confirmModal");
+    const btnCancel = document.querySelector(".btn-cancel");
+    const btnConfirm = document.querySelector(".btn-confirm");
+    let formToSubmit = null;
+
+    // Pour chaque bouton supprimer
+    document.querySelectorAll(".delete-form").forEach(form => {
+      const btnDelete = form.querySelector(".btn-admin");
+
+      btnDelete.addEventListener("click", (e) => {
+        e.preventDefault();
+        formToSubmit = form;
+        modal.style.display = "flex";
+      });
+    });
+
+    // Fermer si on clique sur Annuler
+    btnCancel.addEventListener("click", () => {
+      modal.style.display = "none";
+      formToSubmit = null;
+    });
+
+    // Valider et envoyer le formulaire si on clique sur Confirmer
+    btnConfirm.addEventListener("click", () => {
+      if (formToSubmit) {
+        formToSubmit.submit();
+      }
+    });
+  </script>
 </body>
 </html>
