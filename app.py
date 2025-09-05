@@ -18,6 +18,11 @@ class Utilisateurs(db.Model):#creation d'une table dans la db model represente u
     def __repr__(self):
             return f"base {self.nom}"
 
+class Administracteurs(db.Model):
+    id= db.Column(db.Integer,primary_key=True)
+    nom=db.Column(db.String(30),nullable=False)
+    mdp=db.Column(db.String(200),nullable=False)
+
 class Commentaire(db.Model):
     id= db.Column(db.Integer,primary_key=True)
     nom=db.Column(db.String(30),nullable=False)
@@ -27,10 +32,12 @@ class Commentaire(db.Model):
 
 class Abonnements(db.Model):
     id= db.Column(db.Integer,primary_key=True)
-    nom=db.Column(db.String(30),nullable=False)
+    utilisateur_id=db.Column(db.Integer,db.ForeignKey('utilisateurs.id'),nullable=False)
     service=db.Column(db.String(30),nullable=False)
     statut=db.Column(db.Boolean, default=False)
-    date_post=db.Column(db.DateTime,default=datetime.utcnow)
+    date_debut=db.Column(db.DateTime,default=datetime.utcnow)
+    date_fin=db.Column(db.DateTime)
+    utilisateur=db.relationship('Utilisateurs',backref=db.backref("abonnements",lazy=True))
 
 def init_base():
     with app.app_context():#contexte d'application pour savoir quelle application appeler
@@ -76,6 +83,52 @@ def connexion():
             return render_template("users/inscription.html", erreur="Identifiants incorrects", show_register=False)
     return render_template("users/inscription.html", show_register=False)
 
+@app.route("/connexion_admin",methods=["POST","GET"])
+def connexion_admin():
+    if request.method =="POST":
+        nom= request.form['nom']
+        mdp = request.form['mdp']
+        if not mdp or not nom:
+            return render_template("admin/inscription.html", erreur="Vous n'avez pas rempli tous les champs", show_register=True)
+        else:
+            admin=Administracteurs.query.filter_by(nom=nom).first()
+        if admin and admin.mdp == mdp :
+            session['nom']=admin.nom
+            session['id']=admin.id
+            next_page=request.args.get("next")
+            return redirect(next_page or url_for("accueil_admin"))
+        else:
+            return render_template("admin/inscription.html", erreur="Identifiants incorrects vous n'etes pas administracteur", show_register=False)
+    return render_template("admin/inscription.html", show_register=False)
+
+CODE_ADMIN="001701"
+@app.route("/inscription_admin", methods=["GET", "POST"])
+def inscription_admin():
+    if request.method == "POST":
+        nom=request.form['nom']
+        mdp = request.form['mdp']
+        code_admin= request.form['code_admin']
+        if not mdp or not nom or not code_admin:
+                return render_template("admin/inscription.html", erreur="Vous n'avez pas rempli tous les champs", show_register=True)
+        if code_admin!=CODE_ADMIN:
+            return render_template("admin/inscription.html", erreur="informations incorrects vous n'ete pas administracteur", show_register=True)
+        else:
+            administrateurs_existant=Administracteurs.query.filter_by(nom=nom).first()
+            if administrateurs_existant:
+                return render_template("admin/inscription.html", erreur="cet utilisateur est deja utilise", show_register=True)
+            nouvel_admin = Administracteurs(nom=nom, mdp=mdp)
+            db.session.add(nouvel_admin)
+            db.session.commit()
+            session['nom']=nom
+            retour = url_for('accueil_admin')
+            return redirect(retour)
+    return render_template("admin/inscription.html")
+
+@app.route("/deconnexion_admin",methods=['POST','GET'])
+def deconnexion_admin():
+    session.clear()
+    return render_template("users/index.html")
+
 @app.route("/deconnexion",methods=['POST','GET'])
 def deconnexion():
     session.clear()
@@ -103,9 +156,10 @@ def net_prime():
 
 @app.route("/mon_abonnement")
 def mon_abonnement():
-    if 'nom' not in session:
+    if 'id' not in session:
         return redirect(url_for('connexion', next=url_for('mon_abonnement')))
-    return render_template("users/mon_abonnement.html", session=session)
+    abonnements=Abonnements.query.filter_by(utilisateurs_id=session["id"]).all()
+    return render_template("users/mon_abonnement.html",abonnements=abonnements, session=session)
 
 @app.route("/Contact",methods=['POST','GET'])
 def contacts():
@@ -126,6 +180,8 @@ def confirmation():
 
 @app.route("/admin")
 def accueil_admin():
+    if 'nom' not in session:
+        return redirect(url_for('connexion_admin', next=url_for('accueil_admin')))
     return render_template("admin/index.html")
 
 @app.route("/admin/utilisateurs")
@@ -143,7 +199,22 @@ def supprimer_utilisateur(id):
 
 @app.route("/liste_abonnements")
 def list_abonnements():
-    return render_template("admin/list_abonnement.html")
+    abonnements = Abonnements.query.all()
+    return render_template("admin/list_abonnement.html", abonnements=abonnements)
+
+@app.route("/acheter/<service>")
+def acheter(service):
+    if "id" not in session:
+        return redirect(url_for("connexion", next=url_for("acheter", service=service)))
+    # Exemple : abonnement d’un mois
+    nouvel_abonnement = Abonnements(
+        utilisateur_id=session["id"],
+        service=service,
+        date_fin=datetime.utcnow().replace(month=datetime.utcnow().month + 1)
+    )
+    db.session.add(nouvel_abonnement)
+    db.session.commit()
+    return redirect(url_for("mon_abonnement"))
 
 @app.route("/admin/liste_commentaires")
 def liste_commentaires():

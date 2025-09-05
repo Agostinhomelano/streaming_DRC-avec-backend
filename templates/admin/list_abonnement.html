@@ -78,7 +78,7 @@
         </tr>
       </thead>
       <tbody>
-        {# Exemple de ligne statique, à remplacer par une boucle Jinja #}
+        <!-- {# Exemple de ligne statique, à remplacer par une boucle Jinja #}
         <tr>
           <td>1</td>
           <td>Jean</td>
@@ -91,21 +91,21 @@
           </td>
         </tr>
         {# Boucle Jinja pour afficher les abonnements #}
-        {# 
+        {#  -->
         {% for abonnement in abonnements %}
         <tr>
           <td>{{ abonnement.id }}</td>
-          <td>{{ abonnement.utilisateur }}</td>
-          <td>{{ abonnement.service }}</td>
-          <td>{{ abonnement.date_debut }}</td>
-          <td>{{ abonnement.date_fin }}</td>
-          <td>{{ abonnement.statut }}</td>
+          <td>{{ abonnement.utilisateur.nom }}</td>
+          <td>{{ abonnement.service}}</td>
+          <td>{{ abonnement.date_debut.strftime("%Y-%m-%d") }}</td>
+          <td>{{ abonnement.date_fin.strftime("%Y-%m-%d") if abonnement.date_fin else "-" }}</td>
+          <td>{{ "Actif" if abonnement.statut else "Inactif" }}</td>
           <td>
             <!-- <a href="{{ url_for('admin_gestion_abonnement', id=abonnement.id) }}" class="btn-admin">Gérer</a> -->
           </td>
         </tr>
         {% endfor %}
-        #}
+        <!-- #} -->
       </tbody>
     </table>
     <a href="{{ url_for('accueil_admin') }}" class="btn-retour">Retour au tableau de bord</a>

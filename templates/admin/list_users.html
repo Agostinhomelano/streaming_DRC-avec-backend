@@ -3,8 +3,9 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Liste des abonnements - Admin</title>
+  <title>Liste des utilisateurs</title>
   <link rel="stylesheet" href="{{ url_for('static', filename='css/admin.css') }}">
+  <link rel="icon" id="simulator-favicon" href="{{ url_for('static', filename='image/logo_stream.png') }}">
   <style>
     .admin-table {
   width: 100%;
@@ -42,7 +43,7 @@
 }
 
 .admin-table tr:hover td {
-  background: rgba(224, 9, 20, 0.08);
+  background: rgba(224, 9, 20, 0.21);
 }
 
 .btn-admin {
@@ -126,6 +127,60 @@
     padding: 10px 8px 20px 5px ;
   }
 }
+@media (max-width:500px) {
+  body{
+    height: 150vh;
+  }
+}
+@media (max-width:400px) {
+  body{
+    height: 250vh;
+  }
+  .admin-table, .admin-table thead, .admin-table tbody, .admin-table th, .admin-table tr {
+        display: block;
+        width: 100%;
+      }
+      .admin-table thead {
+        display: none;
+      }
+
+      .admin-table tr {
+        margin-bottom: 15px;
+        border-radius: 10px;
+        background:rgba(255,255,255,0.15);;
+        box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+        padding: 10px;
+        width: 93%;
+      }
+
+      .admin-table td {
+        display: flex;
+        justify-content:first baseline;
+        align-items: center;
+        padding: 10px;
+        gap: 20px;
+        font-size: 0.9rem;
+        border: none;
+        border-bottom: 1px solid #f0f0f079;
+        vertical-align: middle;
+        text-align: center;
+        width: 94%;
+      }
+
+      .admin-table td:last-child {
+        border-bottom: none;
+      }
+
+      .admin-table td::before {
+        content: attr(data-label);
+        font-weight: bold;
+        color: #00A8E1;
+      }
+    }
+    @media (max-width:350px) {
+  body{
+    height: 350vh;
+  }}
   </style>
 </head>
 <body>
@@ -145,10 +200,10 @@
         {# Boucle Jinja pour afficher les abonnements #}
         {% for user in users %}
         <tr>
-          <td>{{ user.id }}</td>
-          <td>{{ user.nom }}</td>
-          <td>{{ user.mdp }}</td>
-          <td>Actif</td>
+          <td data-label="ID">{{ user.id }}</td>
+          <td data-label="Utilisateur">{{ user.nom }}</td>
+          <td data-label="Utilisateur">{{ user.mdp }}</td>
+          <td data-label="activités">Actif</td>
           <td>
             <form action="{{url_for('supprimer_utilisateur',id=user.id)}}" method="post" class="delete-form">
                 <button type="submit" class="btn-admin">Suprimer</button>
@@ -159,6 +214,7 @@
       </tbody>
     </table>
     <a href="{{ url_for('accueil_admin') }}" class="btn-retour">Retour au tableau de bord</a>
+    <a href="{{url_for('deconnexion-admin')}}" class="btn-retour">Deconnexion</a>
   </div>
   <!-- MODALE -->
     <div class="modal" id="confirmModal">

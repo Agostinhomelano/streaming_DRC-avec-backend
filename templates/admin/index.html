@@ -12,12 +12,12 @@
     <div class="admin-cards">
       <div class="admin-card">
         <h2>Utilisateurs</h2>
-        <p>Gérer les comptes inscrits</p>
+        <p>Gérer les utilisateurs</p>
         <a href="{{ url_for('list_users') }}" class="btn-admin">Voir les utilisateurs</a>
       </div>
       <div class="admin-card">
         <h2>Commentaires</h2>
-        <p>Consulter et modérer les messages reçus</p>
+        <p>Consulter les messages reçus</p>
         <a href="{{ url_for('liste_commentaires') }}" class="btn-admin">Voir les commentaires</a>
       </div>
       <div class="admin-card">
@@ -32,6 +32,7 @@
       </div>
     </div>
     <a href="{{ url_for('accueil') }}" class="btn-retour">Retour au site</a>
+    <a href="{{url_for('deconnexion_admin')}}" class="btn-retour">Deconnexion</a>
   </div>
   <footer>
     <p>© 2025 Streaming RDC | Tous droits réservés | Agostinhomelano developement</p>

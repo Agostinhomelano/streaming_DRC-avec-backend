@@ -43,11 +43,14 @@
   <div class="abonnement-container">
     <h1>Mes Abonnements</h1>
     <div class="abonnement-list">
+      {% for abo in abonnements%}
       <div class="abonnement-card netflix">
-        <h2>Netflix</h2>
-        <p>Statut : <span class="statut">Actif</span></p>
-        <p>Prochain paiement : <span class="date">27/09/2025</span></p>
+        <h2>{{abo.service}}</h2>
+        <p>Statut : <span class="statut">{{ "Actif" if abo.statut else "Inactif" }}</span></p>
+        <p>Prochain paiement : <span class="date">{{ abo.date_fin.strftime("%d/%m/%Y") if abo.date_fin else "-"}}</span></p>
         <div class="bouton"><a class="btn prim" href="#">Gérer</a></div>
+        {% else %}
+        <p>Aucun abonnement trouvé.</p>
       </div>
       <div class="abonnement-card prime">
         <h2>Prime Video</h2>

@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="fr">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Streaming RDC Inscription</title>
+    <style>
+      body {
+        margin: 0;
+        font-family: Arial, sans-serif;
+        background: url("../static/image/backgroud.jpg") no-repeat center
+          center/cover;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        backdrop-filter: blur(5px);
+      }
+
+      .container {
+        background: rgba(71, 71, 71, 0.203);
+        padding: 2rem;
+        border-radius: 12px;
+        width: 300px;
+        color: white;
+        text-align: center;
+      }
+
+      h2 {
+        margin-bottom: 1rem;
+      }
+
+      input {
+        width: 90%;
+        padding: 10px;
+        margin: 10px 0;
+        border: none;
+        border-radius: 6px;
+        outline: none;
+      }
+
+      button {
+        width: 100%;
+        padding: 10px;
+        background: #e50914; /* style Netflix */
+        border: none;
+        border-radius: 6px;
+        color: white;
+        font-size: 1rem;
+        cursor: pointer;
+        transition: background 0.3s ease;
+      }
+
+      button:hover {
+        background: #b20710;
+      }
+
+      .switch {
+        margin-top: 1rem;
+        font-size: 0.9rem;
+      }
+
+      .switch a {
+        color: #00a8e1; /* style Prime Video */
+        text-decoration: none;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <!-- Connexion -->
+      <div id="login">
+        <h2>Connexion</h2>
+        {% if erreur %}
+        <div style="color: red">{{ erreur }}</div>
+        {% endif %}
+        <form action="{{url_for('connexion_admin')}}" method="POST">
+          <input type="text" name="nom" placeholder="Nom" required />
+          <input type="password" name="mdp" placeholder="Mot de passe" required/>
+          <button type="submit">Se connecter</button>
+        </form>
+        <div class="switch">
+          Pas encore de compte ? <a href="#register">S'inscrire</a>
+        </div>
+      </div>
+
+      <!-- Inscription -->
+      <div id="register" style="display: none">
+        <h2>Inscription</h2>
+        {% if erreur and request.path == url_for('inscription') %}
+        <div style="color: red">{{ erreur }}</div>
+        {% endif %}
+        <form action="{{url_for('inscription_admin')}}" method="POST">
+          <input type="text" name="nom" placeholder="Nom" />
+          <input type="password" name="mdp" placeholder="Mot de passe"required/>
+          <input type="text" name="code_admin" placeholder="Entrez le code administrateurs" required>
+          <button type="submit">S'inscrire</button>
+        </form>
+        <div class="switch">
+          Déjà inscrit ? <a href="#login">Se connecter</a>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      // Permet de basculer entre Connexion et Inscription
+      const login = document.getElementById("login");
+      const register = document.getElementById("register");
+
+      // Affiche le bon formulaire selon show_register
+      {% if show_register %}
+        login.style.display = "none";
+        register.style.display = "block";
+      {% else %}
+        login.style.display = "block";
+        register.style.display = "none";
+      {% endif %}
+
+      document.querySelectorAll(".switch a").forEach(link => {
+        link.addEventListener("click", (e) => {
+          e.preventDefault();
+          if (link.getAttribute("href") === "#register") {
+            login.style.display = "none";
+            register.style.display = "block";
+          } else {
+            register.style.display = "none";
+            login.style.display = "block";
+          }
+        });
+      });
+    </script>
+  </body>
+</html>
