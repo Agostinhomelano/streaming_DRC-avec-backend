@@ -131,7 +131,47 @@
   body{
     min-height: 150vh;
   }
-}
+  .admin-table, .admin-table thead, .admin-table tbody, .admin-table th, .admin-table tr {
+        display: block;
+        width: 100%;
+      }
+      .admin-table thead {
+        display: none;
+      }
+
+      .admin-table tr {
+        margin-bottom: 15px;
+        border-radius: 10px;
+        background:rgba(255,255,255,0.15);;
+        box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+        padding: 10px;
+        width: 93%;
+      }
+
+      .admin-table td {
+        display: flex;
+        justify-content:first baseline;
+        align-items: center;
+        padding: 10px;
+        gap: 20px;
+        font-size: 0.9rem;
+        border: none;
+        border-bottom: 1px solid #f0f0f079;
+        vertical-align: middle;
+        text-align: center;
+        width: 94%;
+      }
+
+      .admin-table td:last-child {
+        border-bottom: none;
+      }
+
+      .admin-table td::before {
+        content: attr(data-label);
+        font-weight: bold;
+        color: #00A8E1;
+      }
+    }
 @media (max-width:400px) {
   body{
     min-height: 250vh;
@@ -178,9 +218,10 @@
       }
     }
     @media (max-width:350px) {
-  body{
-    min-height: 350vh;
-  }}
+      body{
+        min-height: 350vh;
+    }
+}
   </style>
 </head>
 <body>
@@ -202,7 +243,7 @@
         <tr>
           <td data-label="ID">{{ user.id }}</td>
           <td data-label="Utilisateur">{{ user.nom }}</td>
-          <td data-label="Utilisateur">{{ user.mdp }}</td>
+          <td data-label="Mot de passe">{{ user.mdp }}</td>
           <td data-label="activités">Actif</td>
           <td>
             <form action="{{url_for('supprimer_utilisateur',id=user.id)}}" method="post" class="delete-form">
