@@ -6,6 +6,52 @@
   <title>Streaming RDC</title>
   <link rel="stylesheet" href="{{url_for('static',filename='css/style.css')}}">
   <link rel="stylesheet" href="{{url_for('static',filename='css/netflix.css')}}">
+  <style>
+    /* Arrière-plan sombre */
+    .overlay {
+      display: none; /* masqué par défaut */
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      background: rgba(0,0,0,0.6);
+      z-index: 1000;
+      justify-content: center;
+      align-items: center;
+    }
+
+    /* Fenêtre du formulaire */
+    .modal {
+      background: white;
+      padding: 20px;
+      width: 80%;
+      height: 50%;
+      border-radius: 10px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+      position: relative;
+    }
+
+    /* Bouton de fermeture */
+    .close {
+      position: absolute;
+      top: 10px;
+      right: 15px;
+      font-size: 20px;
+      cursor: pointer;
+    }
+
+    /* Navigation entre pages internes */
+    .page {
+      display: none;
+    }
+    .page.active {
+      display: block;
+    }
+
+    .nav-buttons {
+      margin-top: 15px;
+      text-align: right;
+    }
+  </style>
 </head>
 <body>
   <!-- HEADER -->
@@ -74,7 +120,44 @@
       <p>classique</p>
       <p>1 mois</p>
       <p>prix:<span>4$</span></p>
-      <a class="btn_2" href="{{url_for('acheter',service='Netflix')}}">Acheter</a>
+      <!-- Bouton pour ouvrir -->
+        <button onclick="openModal()" class="btn_2">Acheter</button><!--<a  href="{{url_for('formulaire_achat')}}"></a>-->
+      <!-- Overlay + modal -->
+      <div id="overlay" class="overlay">
+        <div class="modal">
+          <span class="close" onclick="closeModal()">&times;</span>
+
+          <!-- Page 1 -->
+      <div class="page active" id="page1">
+        <h2>choisisez votre moyen de payement</h2>
+        <div class="nav-buttons"><button>M-pesa</button></div>
+        <div class="nav-buttons"><button>Airtel money</button></div>
+        <div class="nav-buttons">
+          <button onclick="nextPage(2)">Suivant</button>
+        </div>
+      </div>
+
+      <!-- Page 2 -->
+      <div class="page" id="page2">
+        <h2>Page 2</h2>
+        <input type="email" placeholder="Email"><br>
+        <div class="nav-buttons">
+          <button onclick="prevPage(1)">Précédent</button>
+          <button onclick="nextPage(3)">Suivant</button>
+        </div>
+      </div>
+
+      <!-- Page 3 -->
+      <div class="page" id="page3">
+        <h2>Page 3</h2>
+        <p>Merci d'avoir rempli le formulaire !</p>
+        <div class="nav-buttons">
+          <button onclick="prevPage(2)">Précédent</button>
+          <button onclick="closeModal()">Fermer</button>
+        </div>
+      </div>
+    </div>
+  </div>
     </div>
     <div class="offre">
       <img src="{{url_for('static',filename='image/img24.png')}}" alt="">
@@ -103,6 +186,7 @@
     <p>© 2025 Streaming RDC | Tous droits réservés | Agostinhomelano developement</p>
   </footer>
 
-  <script src="{{url_for('static',filename='js/index.js')}}"></script>
+  <script src="{{url_for('static',filename='js/index.js')}}">
+  </script>
 </body>
 </html>

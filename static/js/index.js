@@ -8,3 +8,20 @@ document.addEventListener('click', function(e) {
     menu.classList.remove('open');
   }
 });
+function openModal() {
+      document.getElementById("overlay").style.display = "flex";
+    }
+
+    function closeModal() {
+      document.getElementById("overlay").style.display = "none";
+    }
+
+    function nextPage(pageNumber) {
+      document.querySelectorAll(".page").forEach(p => p.classList.remove("active"));
+      document.getElementById("page" + pageNumber).classList.add("active");
+    }
+
+    function prevPage(pageNumber) {
+      document.querySelectorAll(".page").forEach(p => p.classList.remove("active"));
+      document.getElementById("page" + pageNumber).classList.add("active");
+    }
