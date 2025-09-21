@@ -189,7 +189,7 @@ def deconnexion_admin():
 
 # -------------------- ABONNEMENTS (USER) --------------------
 
-@app.route("/formulaire d'achetat")
+@app.route("/formulaire d'achat")
 def formulaire_achat():
     return render_template("users/formulaire.html", session=session)
 

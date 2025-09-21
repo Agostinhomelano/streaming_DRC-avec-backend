@@ -6,8 +6,14 @@
   <style>
     body {
       font-family: Arial, sans-serif;
+      color: white;
+      background: url(/static/image/backgroud.jpg) no-repeat center center/cover;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      flex-wrap: wrap;
+      align-items: center;
     }
-
     /* Arrière-plan sombre */
     .overlay {
       display: none; 
@@ -83,7 +89,7 @@
     input[type="text"],input[type="number"]{
       height: 50px;
       margin-top: 10px;
-      background:linear-gradient(135deg,red,rgba(0, 0, 0, 0.779));
+      background-color: rgba(116, 116, 116, 0.301);
       color: white;
       border: none;
       border-radius: 10px;
@@ -96,13 +102,28 @@
       cursor: pointer;
       color: red;
     }
+    .img img{
+      width: 500px;
+      height: 500px;
+    }
+    .butn{
+      background-color: red;
+      border: none;
+      border-radius: 10px;
+      height: 30px;
+    }
+    .butn:hover{
+      background-color: aliceblue;
+      color:red;
+    }
   </style>
 </head>
 <body>
-
+  <div class="img"><img src="{{url_for('static',filename='image/logo_stream.png ')}}" alt=""></div>
+  <h1>Effectuez tous vos payement en toutes securite</h1>
+  <p>suivez les instructions suivante en cliquant sur ce boutton</p>
   <!-- Bouton pour ouvrir -->
-  <button onclick="openModal()">Ouvrir le formulaire</button>
-
+  <button class="butn" onclick="openModal()">Commencer</button>
   <!-- Overlay + modal -->
   <div id="overlay" class="overlay">
     <div class="modal">
@@ -124,12 +145,13 @@
         <h3>Envoyer vos frais d'abonnements en toutes securite et tres facilement.</h3>
         <div class="input">
           <input type="text"placeholder="Nom d'utilisateur m-pesa">
-          <input type="number" placeholder="Numéro de compte M-Pesa"><br>
+          <input type="number" placeholder="Numéro de compte M-Pesa">
+          <input type="number" placeholder="Montant versé"><br>
         </div>
         <p>
           Grace a ces information nous allons verifier si c'est reelemnt vous qui avez envoyer le montant requie.
         </p>
-        <p>copier ce numero et envoyer l'argent dans ce compte <span class="numero" onclick="copyToCliboard(this)">0973251343</span></p>
+        <p>cliquez ici pour copier ce numero et envoyer l'argent dans ce compte <span class="numero" onclick="copyToCliboard(this)">0973251343</span></p>
         <div class="nav-buttons">
           <button onclick="goToPage('page1')">Précédent</button>
           <button onclick="goToPage('page3')">Valider</button>
@@ -138,8 +160,17 @@
 
       <!-- Page 2 Airtel -->
       <div class="page" id="page-airtel">
-        <h2 style="color:red">Paiement Airtel Money</h2>
-        <input type="text" placeholder="Numéro Airtel"><br>
+        <h2 style="color:red">Service Airtel Money</h2>
+        <h3>Envoyer vos frais d'abonnements en toutes securite et tres facilement.</h3>
+        <div class="input">
+          <input type="text"placeholder="Nom d'utilisateur Airtel Money">
+          <input type="number" placeholder="Numéro de compte Airtel Money">
+          <input type="number" placeholder="Montant versé"><br>
+        </div>
+        <p>
+          Grace a ces information nous allons verifier si c'est reelemnt vous qui avez envoyer le montant requie.
+        </p>
+        <p>cliquez ici pour copier ce numero et envoyer l'argent dans ce compte <span class="numero" onclick="copyToCliboard(this)">0973251343</span></p>
         <div class="nav-buttons">
           <button onclick="goToPage('page1')">Précédent</button>
           <button onclick="goToPage('page3')">Valider</button>
@@ -148,8 +179,17 @@
 
       <!-- Page 2 Orange -->
       <div class="page" id="page-orange">
-        <h2 style="color:orange">Paiement Orange Money</h2>
-        <input type="text" placeholder="Numéro Orange"><br>
+        <h2 style="color:orange">Service Orange Money</h2>
+        <h3>Envoyer vos frais d'abonnements en toutes securite et tres facilement.</h3>
+        <div class="input">
+          <input type="text"placeholder="Nom d'utilisateur Orange Money">
+          <input type="number" placeholder="Numéro de compte Orange Money">
+          <input type="number" placeholder="Montant versé"><br>
+        </div>
+        <p>
+          Grace a ces information nous allons verifier si c'est reelemnt vous qui avez envoyer le montant requie.
+        </p>
+        <p>cliquez ici pour copier ce numero et envoyer l'argent dans ce compte <span class="numero" onclick="copyToCliboard(this)">0973251343</span></p>
         <div class="nav-buttons">
           <button onclick="goToPage('page1')">Précédent</button>
           <button onclick="goToPage('page3')">Valider</button>
