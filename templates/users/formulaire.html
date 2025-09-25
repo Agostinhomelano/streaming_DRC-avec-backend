@@ -14,7 +14,6 @@
       flex-wrap: wrap;
       align-items: center;
     }
-    /* Arrière-plan sombre */
     .overlay {
       display: none; 
       position: fixed;
@@ -25,8 +24,6 @@
       justify-content: center;
       align-items: center;
     }
-
-    /* Fenêtre du formulaire */
     .modal {
       background: rgb(208, 207, 207);
       color:black;
@@ -37,8 +34,6 @@
       box-shadow: 0 4px 10px rgba(0,0,0,0.3);
       position: relative;
     }
-
-    /* Bouton de fermeture */
     .close {
       position: absolute;
       top: 10px;
@@ -46,16 +41,10 @@
       font-size: 20px;
       cursor: pointer;
     }
-
-    /* Pages internes */
     .page { display: none; }
     .page.active { display: block; }
-
-    .nav-buttons {
-      margin-top: 15px;
-      text-align: right;
-    }
-
+    #page3{text-align: center;}
+    .nav-buttons { margin-top: 15px; text-align: right; }
     .boutons {
       padding:10px ;
       display: flex;
@@ -71,50 +60,79 @@
       transition: transform 0.3s;
       text-align: center;
       color: white;
-      text-align: center;
       text-decoration: none;
       font-size: 18px;
       font-weight: bold;
     }
     .div:hover { transform: scale(1.05); }
-
     .one { background:linear-gradient(135deg,red,rgba(0, 0, 0, 0.779)); width:40%; height: 100px; }
     .two { background:linear-gradient(135deg,red,white); width: 40%; height: 100px; }
     .tree { background:linear-gradient(125deg,Orange,black); width: 40%; height: 100px; }
-    .input{
-      display: flex;
-      flex-direction: column;
-      height: auto;
-    }
+    .input{ display: flex; flex-direction: column; height: auto; }
     input[type="text"],input[type="number"]{
-      height: 50px;
-      margin-top: 10px;
+      height: 50px; margin-top: 10px;
+      width: 95%;
       background-color: rgba(116, 116, 116, 0.301);
-      color: white;
-      border: none;
-      border-radius: 10px;
-      padding: 10px ;
+      color: white; border: none; border-radius: 10px; padding: 10px ;
     }
-    input::placeholder{
-      color: white;
+    input::placeholder{ color: white; }
+    .numero{ cursor: pointer; color: red; }
+    .img img{ width: 300px; height: 300px; }
+    .butn{ background-color: red; border: none; border-radius: 10px; height: 30px; }
+    .butn-a{
+      background-color: red;
+      border: none; 
+      border-radius: 10px; 
+      height: 25px; 
+      width: 80px;
+      text-decoration: none; 
+      text-align: center;
+      padding: 5px 0 0 0;
+      margin: 10px;
+      color: black;
     }
-    .numero{
-      cursor: pointer;
+    .butn-a:hover{
+      background-color: white;
       color: red;
     }
-    .img img{
-      width: 500px;
-      height: 500px;
+    .butn:hover{ background-color: aliceblue; color:red; }
+    .m{ background-color: red; border: none; border-radius: 5px; padding: 10px; }
+    .m:hover{ background-color: white; color: red; }
+    .o{ background-color: orange; border: none; border-radius: 5px; padding: 10px; }
+    .o:hover{ background-color: white; color: orange; }
+    h1{ text-align: center; }
+    @media (max-width:500px) {
+      body{
+        min-height: 280vh;
+      }
+      .img img{
+        width: 100vh;
+        height: 100vh;
+      }
+      h1{
+        font-size: 50px;
+      }
+      p{
+        font-size: 40px;
+        text-align: center;
+      }
+      .butn{ 
+        border-radius: 15px; 
+        height: 60px; 
+        width: 30%;
+        font-size: 30px;
+      }
+    .butn-a{
+      border-radius: 15px; 
+      height: 50px; 
+      width: 30%;
+      text-decoration: none; 
+      text-align: center;
+      padding: 5px 0 0 0;
+      margin: 15px;
+      color: black;
+      font-size: 30px;
     }
-    .butn{
-      background-color: red;
-      border: none;
-      border-radius: 10px;
-      height: 30px;
-    }
-    .butn:hover{
-      background-color: aliceblue;
-      color:red;
     }
   </style>
 </head>
@@ -122,13 +140,12 @@
   <div class="img"><img src="{{url_for('static',filename='image/logo_stream.png ')}}" alt=""></div>
   <h1>Effectuez tous vos payement en toutes securite</h1>
   <p>suivez les instructions suivante en cliquant sur ce boutton</p>
-  <!-- Bouton pour ouvrir -->
   <button class="butn" onclick="openModal()">Commencer</button>
-  <!-- Overlay + modal -->
+  <a class="butn-a" href="{{url_for('accueil')}}"><div>Accueil</div></a>
+
   <div id="overlay" class="overlay">
     <div class="modal">
       <span class="close" onclick="closeModal()">&times;</span>
-
       <!-- Page 1 -->
       <div class="page active" id="page1">
         <h2>Choisissez un moyen de paiement</h2>
@@ -138,23 +155,23 @@
           <a href="#" class="div tree" onclick="nextPage('orange'); return false;"><div>Orange Money</div></a>
         </div>
       </div>
-
       <!-- Page 2 M-Pesa -->
       <div class="page" id="page-mpesa">
         <h2 style="color:red">Service M-Pesa</h2>
         <h3>Envoyer vos frais d'abonnements en toutes securite et tres facilement.</h3>
         <div class="input">
-          <input type="text"placeholder="Nom d'utilisateur m-pesa">
-          <input type="number" placeholder="Numéro de compte M-Pesa">
-          <input type="number" placeholder="Montant versé"><br>
+          <form id="form-mpesa">
+            <input type="text" placeholder="Nom d'utilisateur m-pesa" required name="nom">
+            <input type="number" placeholder="Numéro de compte M-Pesa" required name="num">
+            <input type="number" placeholder="Montant versé" required name="prix"><br>
+          </form>
         </div>
-        <p>
-          Grace a ces information nous allons verifier si c'est reelemnt vous qui avez envoyer le montant requie.
+        <p>cliquez ici pour copier ce numero: 
+          <span class="numero" onclick="copyToClipboard(this)">0973251343</span>
         </p>
-        <p>cliquez ici pour copier ce numero et envoyer l'argent dans ce compte <span class="numero" onclick="copyToCliboard(this)">0973251343</span></p>
         <div class="nav-buttons">
-          <button onclick="goToPage('page1')">Précédent</button>
-          <button onclick="goToPage('page3')">Valider</button>
+          <button class="m" onclick="goToPage('page1')">Précédent</button>
+          <button class="m" type="button" onclick="VerifierAvantSuivant('form-mpesa','page3')">Valider</button>
         </div>
       </div>
 
@@ -163,17 +180,18 @@
         <h2 style="color:red">Service Airtel Money</h2>
         <h3>Envoyer vos frais d'abonnements en toutes securite et tres facilement.</h3>
         <div class="input">
-          <input type="text"placeholder="Nom d'utilisateur Airtel Money">
-          <input type="number" placeholder="Numéro de compte Airtel Money">
-          <input type="number" placeholder="Montant versé"><br>
+          <form id="form-airtel">
+            <input type="text" placeholder="Nom d'utilisateur Airtel Money" required name="nom">
+            <input type="number" placeholder="Numéro de compte Airtel Money" required name="num">
+            <input type="number" placeholder="Montant versé" required name="prix"><br>
+          </form>
         </div>
-        <p>
-          Grace a ces information nous allons verifier si c'est reelemnt vous qui avez envoyer le montant requie.
+        <p>cliquez ici pour copier ce numero: 
+          <span class="numero" onclick="copyToClipboard(this)">0973251343</span>
         </p>
-        <p>cliquez ici pour copier ce numero et envoyer l'argent dans ce compte <span class="numero" onclick="copyToCliboard(this)">0973251343</span></p>
         <div class="nav-buttons">
-          <button onclick="goToPage('page1')">Précédent</button>
-          <button onclick="goToPage('page3')">Valider</button>
+          <button class="m" onclick="goToPage('page1')">Précédent</button>
+          <button class="m" type="button" onclick="VerifierAvantSuivant('form-airtel','page3')">Valider</button>
         </div>
       </div>
 
@@ -182,26 +200,28 @@
         <h2 style="color:orange">Service Orange Money</h2>
         <h3>Envoyer vos frais d'abonnements en toutes securite et tres facilement.</h3>
         <div class="input">
-          <input type="text"placeholder="Nom d'utilisateur Orange Money">
-          <input type="number" placeholder="Numéro de compte Orange Money">
-          <input type="number" placeholder="Montant versé"><br>
+          <form id="form-orange">
+            <input type="text" placeholder="Nom d'utilisateur Orange Money" required name="nom">
+            <input type="number" placeholder="Numéro de compte Orange Money" required name="num">
+            <input type="number" placeholder="Montant versé" required name="prix"><br>
+          </form>
         </div>
-        <p>
-          Grace a ces information nous allons verifier si c'est reelemnt vous qui avez envoyer le montant requie.
+        <p>cliquez ici pour copier ce numero: 
+          <span class="numero" onclick="copyToClipboard(this)" style="color: orange;">0973251343</span>
         </p>
-        <p>cliquez ici pour copier ce numero et envoyer l'argent dans ce compte <span class="numero" onclick="copyToCliboard(this)">0973251343</span></p>
         <div class="nav-buttons">
-          <button onclick="goToPage('page1')">Précédent</button>
-          <button onclick="goToPage('page3')">Valider</button>
+          <button class="o" onclick="goToPage('page1')">Précédent</button>
+          <button class="o" type="button" onclick="VerifierAvantSuivant('form-orange','page3')">Valider</button>
         </div>
       </div>
 
       <!-- Page 3 Confirmation -->
       <div class="page" id="page3">
-        <h2>Merci d'avoir rempli le formulaire !</h2>
-        <p>Votre demande est en cours de traitement.</p>
+        <h2>Merci de nous avoir fais confiance !</h2>
+        <p>Votre abonnement est en cours de traitement.</p>
+        <p>Vous recevrez une notification et un message WhatsApp si tout s'est bien passé.</p>
         <div class="nav-buttons">
-          <button onclick="closeModal()">Fermer</button>
+          <button class="m" onclick="closeModal()">Quitter</button>
         </div>
       </div>
 
@@ -212,30 +232,33 @@
     function openModal() {
       document.getElementById("overlay").style.display = "flex";
     }
-
     function closeModal() {
       document.getElementById("overlay").style.display = "none";
-      // Réinitialiser à la page 1
       goToPage('page1');
     }
-
     function nextPage(type) {
       goToPage("page-" + type);
     }
-
     function goToPage(pageId) {
       document.querySelectorAll(".page").forEach(p => p.classList.remove("active"));
       document.getElementById(pageId).classList.add("active");
     }
-    function copyToCliboard(element){
+    function copyToClipboard(element){
       const text = element.innerText;
       navigator.clipboard.writeText(text).then(()=>{
-        alert("Numero copier:"+ text);
+        alert("Numero copié: "+ text);
       }).catch(err=>{
         console.error("Erreur lors de la copie:",err);
       });
     }
+    function VerifierAvantSuivant(formId, nextPageId){
+      let form = document.getElementById(formId);
+      if (!form.checkValidity()){
+        form.reportValidity();
+        return;
+      }
+      goToPage(nextPageId);
+    }
   </script>
-
 </body>
 </html>

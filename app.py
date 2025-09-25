@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, redirect, url_for, session, jsonify
+from flask import Flask, render_template, request, redirect, url_for, session, jsonify,flash
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import func
 from datetime import datetime, timedelta
@@ -52,6 +52,18 @@ class Abonnements(db.Model):
             return 0
         delta = self.date_fin - datetime.utcnow()
         return max(delta.days, 0)
+
+class Paiement(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    utilisateur_id = db.Column(db.Integer, db.ForeignKey('utilisateurs.id'), nullable=False)
+    service = db.Column(db.String(30), nullable=False)
+    moyen = db.Column(db.String(20),nullable=False)
+    nom_compte=db.Column(db.String(50), nullable=False)
+    numero=db.Column(db.String(20), nullable=False)
+    montant=db.Column(db.Float, nullable=False)
+    statut = db.Column(db.Boolean, default="En attente")
+    date_paiement = db.Column(db.DateTime, default=datetime.utcnow)
+    utilisateur=db.relationship("Utilisateurs", backref="paiememts",lazy=True)
 
 # -------------------- INIT DB --------------------
 
@@ -146,7 +158,6 @@ def connexion_admin():
         mdp = request.form['mdp']
         if not mdp or not nom:
             return render_template("admin/inscription.html", erreur="Vous n'avez pas rempli tous les champs", show_register=True)
-
         admin = Administracteurs.query.filter_by(nom=nom).first()
         if admin and admin.mdp == mdp:
             session['admin_id'] = admin.id
@@ -191,6 +202,14 @@ def deconnexion_admin():
 
 @app.route("/formulaire d'achat")
 def formulaire_achat():
+    if 'user_id' not in session:
+        return redirect(url_for('connexion', next=url_for('formulaire_achat')))
+    if request.method == "POST":
+        nom = request.form['nom']
+        num = request.form['num']
+        prix = request.form['prix']
+        abonnements = Abonnements.query.filter_by(utilisateur_id=session["user_id"]).order_by(Abonnements.date_fin.desc()).all()
+        
     return render_template("users/formulaire.html", session=session)
 
 
@@ -201,42 +220,111 @@ def mon_abonnement():
     abonnements = Abonnements.query.filter_by(utilisateur_id=session["user_id"]).order_by(Abonnements.date_fin.desc()).all()
     return render_template("users/mon_abonnement.html", abonnements=abonnements, session=session)
 
+
+# 1) Route appelée quand on clique sur "Acheter" depuis la page des offres.
+#    Cette route stocke service+prix dans la session puis redirige vers la page qui contient la modale.
+@app.route("/select_service", methods=["POST"])
+def select_service():
+    service = request.form.get("service")
+    prix = request.form.get("prix")
+    if not service or not prix:
+        flash("Erreur: service ou prix manquant.")
+        return redirect(url_for("accueil"))   # ou la page des offres
+    # stocke en session
+    session["service"] = service
+    session["prix"] = prix
+    return redirect(url_for("payment_page"))
+
+
+# 2) Page qui contient le bouton "Commencer" (ouvre la modale).
+@app.route("/payment_page")
+def payment_page():
+    service = session.get("service")
+    prix = session.get("prix")
+    if not service or not prix:
+        # si on arrive ici directement sans avoir choisi d'offre
+        flash("Choisissez d'abord une offre.")
+        return redirect(url_for("accueil"))   # ou ta page d'offres
+
+    # Optionnel : forcer connexion
+    if "user_id" not in session:
+        return redirect(url_for("connexion", next=url_for("payment_page")))
+
+    return render_template("payment_page.html", service=service, prix=prix)
+
+
+# 3) Route qui reçoit la soumission finale du formulaire de la modale
+@app.route("/payer", methods=["POST"])
+def payer():
+    if "user_id" not in session:
+        return redirect(url_for("connexion", next=url_for("payment_page")))
+
+    service = request.form.get("service")
+    prix = request.form.get("prix")
+    moyen = request.form.get("moyen")
+    nom_compte = request.form.get("nom_compte")
+    numero = request.form.get("numero")
+    montant = request.form.get("montant") or prix
+
+    try:
+        montant = float(montant)
+    except Exception:
+        montant = float(prix) if prix else 0.0
+
+    paiement = Paiement(
+        utilisateur_id=session["user_id"],
+        service=service,
+        moyen=moyen,
+        nom_compte=nom_compte,
+        numero=numero,
+        montant=montant,
+        statut="En attente"
+    )
+    db.session.add(paiement)
+    db.session.commit()
+
+    # on peut nettoyer la session (optionnel)
+    session.pop("service", None)
+    session.pop("prix", None)
+
+    return render_template("users/confirmation.html", message="Votre paiement a été enregistré et est en attente de vérification.")
+
 # Achat direct par lien (1 mois par défaut)
-@app.route("/acheter/<service>")
-def acheter(service):
-    if "user_id" not in session:
-        return redirect(url_for("connexion", next=url_for("acheter", service=service)))
+# @app.route("/acheter/<service>")
+# def acheter(service):
+#     if "user_id" not in session:
+#         return redirect(url_for("connexion", next=url_for("acheter", service=service)))
 
-    nouvel_abonnement = Abonnements(
-        utilisateur_id=session["user_id"],
-        service=service,
-        statut=True,
-        date_debut=datetime.utcnow(),
-        date_fin=datetime.utcnow() + timedelta(days=30)
-    )
-    db.session.add(nouvel_abonnement)
-    db.session.commit()
-    return redirect(url_for("mon_abonnement"))
+#     nouvel_abonnement = Abonnements(
+#         utilisateur_id=session["user_id"],
+#         service=service,
+#         statut=True,
+#         date_debut=datetime.utcnow(),
+#         date_fin=datetime.utcnow() + timedelta(days=30)
+#     )
+#     db.session.add(nouvel_abonnement)
+#     db.session.commit()
+#     return redirect(url_for("mon_abonnement"))
 
-# Achat via popup AJAX (optionnel si tu ajoutes le popup côté front)
-@app.route("/ajouter_abonnement", methods=["POST"])
-def ajouter_abonnement():
-    if "user_id" not in session:
-        return jsonify({"success": False, "message": "Veuillez vous connecter."}), 401
+# # Achat via popup AJAX (optionnel si tu ajoutes le popup côté front)
+# @app.route("/ajouter_abonnement", methods=["POST"])
+# def ajouter_abonnement():
+#     if "user_id" not in session:
+#         return jsonify({"success": False, "message": "Veuillez vous connecter."}), 401
 
-    service = request.form.get("service", "Netflix")
-    duree = int(request.form.get("duree", 30))
+#     service = request.form.get("service", "Netflix")
+#     duree = int(request.form.get("duree", 30))
 
-    abo = Abonnements(
-        utilisateur_id=session["user_id"],
-        service=service,
-        statut=True,
-        date_debut=datetime.utcnow(),
-        date_fin=datetime.utcnow() + timedelta(days=duree)
-    )
-    db.session.add(abo)
-    db.session.commit()
-    return jsonify({"success": True, "user_id": session["user_id"]})
+#     abo = Abonnements(
+#         utilisateur_id=session["user_id"],
+#         service=service,
+#         statut=True,
+#         date_debut=datetime.utcnow(),
+#         date_fin=datetime.utcnow() + timedelta(days=duree)
+#     )
+#     db.session.add(abo)
+#     db.session.commit()
+#     return jsonify({"success": True, "user_id": session["user_id"]})
 
 # -------------------- CONTACT --------------------
 
@@ -301,3 +389,4 @@ def supprimer_commentaire(id):
 if __name__ == '__main__':
     init_base()
     app.run(debug=True)
+    
