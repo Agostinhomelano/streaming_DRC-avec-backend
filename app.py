@@ -209,7 +209,9 @@ def formulaire_achat():
         num = request.form['num']
         prix = request.form['prix']
         abonnements = Abonnements.query.filter_by(utilisateur_id=session["user_id"]).order_by(Abonnements.date_fin.desc()).all()
-        
+        nouvel_achat=Paiement(nom=nom,num=num,prix=prix)
+        db.session.add(nouvel_achat)
+        db.session.commit()
     return render_template("users/formulaire.html", session=session)
 
 

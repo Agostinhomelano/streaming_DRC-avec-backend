@@ -8,20 +8,31 @@ document.addEventListener('click', function(e) {
     menu.classList.remove('open');
   }
 });
-function openModal() {
-      document.getElementById("overlay").style.display = "flex";
-    }
+  function openModal(offre, prix) {
+  document.getElementById("overlay").style.display = "flex";
+  document.getElementById("offreChoisie").innerText = "Offre : " + offre + " - Prix : " + prix + "$";
+  document.getElementById("inputOffre").value = offre;
+  document.getElementById("inputPrix").value = prix;
+  goToPage("page1");
+}
 
-    function closeModal() {
-      document.getElementById("overlay").style.display = "none";
-    }
+function closeModal() {
+  document.getElementById("overlay").style.display = "none";
+}
 
-    function nextPage(pageNumber) {
-      document.querySelectorAll(".page").forEach(p => p.classList.remove("active"));
-      document.getElementById("page" + pageNumber).classList.add("active");
-    }
+function goToPage(id) {
+  document.querySelectorAll(".page").forEach(p => p.classList.remove("active"));
+  document.getElementById(id).classList.add("active");
+}
 
-    function prevPage(pageNumber) {
-      document.querySelectorAll(".page").forEach(p => p.classList.remove("active"));
-      document.getElementById("page" + pageNumber).classList.add("active");
-    }
+function nextPage(service) {
+  if (service === "mpesa") goToPage("page-mpesa");
+  if (service === "airtel") goToPage("page-airtel");
+  if (service === "orange") goToPage("page-orange");
+}
+
+// Copier numéro
+function copyToClipboard(el) {
+  navigator.clipboard.writeText(el.innerText);
+  alert("Numéro copié : " + el.innerText);
+}

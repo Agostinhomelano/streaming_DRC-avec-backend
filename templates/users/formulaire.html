@@ -55,19 +55,18 @@
     }
     .div {
       border-radius: 10px;
-      padding: 20px;
       margin-top:30px ;
       transition: transform 0.3s;
       text-align: center;
       color: white;
-      text-decoration: none;
       font-size: 18px;
       font-weight: bold;
+      border: none;
     }
     .div:hover { transform: scale(1.05); }
-    .one { background:linear-gradient(135deg,red,rgba(0, 0, 0, 0.779)); width:40%; height: 100px; }
-    .two { background:linear-gradient(135deg,red,white); width: 40%; height: 100px; }
-    .tree { background:linear-gradient(125deg,Orange,black); width: 40%; height: 100px; }
+    .one { background:linear-gradient(135deg,red,rgba(0, 0, 0, 0.779)); width:45%; height: 200px;}
+    .two { background:linear-gradient(135deg,red,white); width: 45%; height: 200px; }
+    .tree { background:linear-gradient(125deg,Orange,black); width: 45%; height: 200px; }
     .input{ display: flex; flex-direction: column; height: auto; }
     input[type="text"],input[type="number"]{
       height: 50px; margin-top: 10px;
@@ -150,9 +149,9 @@
       <div class="page active" id="page1">
         <h2>Choisissez un moyen de paiement</h2>
         <div class="boutons">
-          <a href="#"  class="div one" onclick="nextPage('mpesa'); return false;"><div>M-Pesa</div></a>
-          <a href="#" class="div two" onclick="nextPage('airtel'); return false;"><div>Airtel Money</div></a>
-          <a href="#" class="div tree" onclick="nextPage('orange'); return false;"><div>Orange Money</div></a>
+          <button class="div one" onclick="nextPage('mpesa'); return false;"><div>M-Pesa</div></button>
+          <button class="div two" onclick="nextPage('airtel'); return false;"><div>Airtel Money</div></button>
+          <button class="div tree" onclick="nextPage('orange'); return false;"><div>Orange Money</div></button>
         </div>
       </div>
       <!-- Page 2 M-Pesa -->
