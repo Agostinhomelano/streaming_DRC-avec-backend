@@ -11,7 +11,7 @@ document.addEventListener('click', function(e) {
   function openModal(offre, prix) {
   document.getElementById("overlay").style.display = "flex";
   document.getElementById("offreChoisie").innerText = "Offre : " + offre + " - Prix : " + prix + "$";
-  document.getElementById("inputOffre").value = offre;
+  document.getElementById("inputService").value = offre;
   document.getElementById("inputPrix").value = prix;
   goToPage("page1");
 }
@@ -35,4 +35,13 @@ function nextPage(service) {
 function copyToClipboard(el) {
   navigator.clipboard.writeText(el.innerText);
   alert("Numéro copié : " + el.innerText);
+}
+
+function submitPayment(formId){
+  const form= document.getElementById(formId);
+  if (form.checkValidity()){
+    goToPage("page3");
+  } else{
+    alert("Veuillez remplir tous les champs.")
+  }
 }
