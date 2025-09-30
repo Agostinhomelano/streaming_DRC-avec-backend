@@ -13,6 +13,7 @@ document.addEventListener('click', function(e) {
   document.getElementById("offreChoisie").innerText = "Offre : " + offre + " - Prix : " + prix + "$";
   document.getElementById("inputService").value = offre;
   document.getElementById("inputPrix").value = prix;
+  choix={ offre:offre,prix:prix}//initialisation du prix
   goToPage("page1");
 }
 
@@ -45,3 +46,36 @@ function submitPayment(formId){
     alert("Veuillez remplir tous les champs.")
   }
 }
+let choix={};
+function choisirPaiement(moyen){
+  choix.moyenPaiement=moyen;
+  choix.offre=document.getElementById("inputService").value;
+  choix.prix=document.getElementById("inputPrix").value;
+  if (moyen === "M-Pesa")goToPage("page-mpesa");
+  if (moyen === "Airtel Money")goToPage("page-airtel");
+  if (moyen === "Orange Money")goToPage("page-orange");
+  document.getElementById("service-titre").innerText="service"+moyen;
+}
+document.getElementById("paiementForm").addEventListener("submit",
+  function(e){
+    e.preventDefault();
+    let data={
+      offre:document.getElementById("inputService").value,
+      prix:document.getElementById("inputPrix").value,
+      moyenPaiement:choix.moyenPaiement,
+      nom: this.nom.value,
+      numero:this.num.value,
+      montant:this.montant.value
+    };
+    fetch("/valider_paiement",{
+      method:"POST",
+      headers:{"content-Type":"application/json"},
+      body: JSON.stringify(data)
+    })
+    .then(res => res.json())
+    .then(rep =>{
+      alert("Paiement enregistre avec succes!");
+      goToPage("page3");
+      })
+      .catch(err=> console.error(err));
+});

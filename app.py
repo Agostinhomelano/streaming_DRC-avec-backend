@@ -204,14 +204,6 @@ def deconnexion_admin():
 def formulaire_achat():
     if 'user_id' not in session:
         return redirect(url_for('connexion', next=url_for('formulaire_achat')))
-    if request.method == "POST":
-        nom = request.form['nom']
-        num = request.form['num']
-        prix = request.form['prix']
-        abonnements = Abonnements.query.filter_by(utilisateur_id=session["user_id"]).order_by(Abonnements.date_fin.desc()).all()
-        nouvel_achat=Paiement(nom=nom,num=num,prix=prix)
-        db.session.add(nouvel_achat)
-        db.session.commit()
     return render_template("users/formulaire.html", session=session)
 
 
@@ -223,110 +215,26 @@ def mon_abonnement():
     return render_template("users/mon_abonnement.html", abonnements=abonnements, session=session)
 
 
-# 1) Route appelée quand on clique sur "Acheter" depuis la page des offres.
-#    Cette route stocke service+prix dans la session puis redirige vers la page qui contient la modale.
-@app.route("/select_service", methods=["POST"])
-def select_service():
-    service = request.form.get("service")
-    prix = request.form.get("prix")
-    if not service or not prix:
-        flash("Erreur: service ou prix manquant.")
-        return redirect(url_for("accueil"))   # ou la page des offres
-    # stocke en session
-    session["service"] = service
-    session["prix"] = prix
-    return redirect(url_for("payment_page"))
 
 
-# 2) Page qui contient le bouton "Commencer" (ouvre la modale).
-@app.route("/payment_page")
-def payment_page():
-    service = session.get("service")
-    prix = session.get("prix")
-    if not service or not prix:
-        # si on arrive ici directement sans avoir choisi d'offre
-        flash("Choisissez d'abord une offre.")
-        return redirect(url_for("accueil"))   # ou ta page d'offres
-
-    # Optionnel : forcer connexion
+@app.route("/valider_paiement", methods=["POST"])
+def valider_paiement():
+    data =request.get_json()
     if "user_id" not in session:
-        return redirect(url_for("connexion", next=url_for("payment_page")))
-
-    return render_template("payment_page.html", service=service, prix=prix)
-
-
-# 3) Route qui reçoit la soumission finale du formulaire de la modale
-@app.route("/payer", methods=["POST"])
-def payer():
-    if "user_id" not in session:
-        return redirect(url_for("connexion", next=url_for("payment_page")))
-
-    service = request.form.get("service")
-    prix = request.form.get("prix")
-    moyen = request.form.get("moyen")
-    nom_compte = request.form.get("nom_compte")
-    numero = request.form.get("numero")
-    montant = request.form.get("montant") or prix
-
-    try:
-        montant = float(montant)
-    except Exception:
-        montant = float(prix) if prix else 0.0
-
-    paiement = Paiement(
-        utilisateur_id=session["user_id"],
-        service=service,
-        moyen=moyen,
-        nom_compte=nom_compte,
-        numero=numero,
-        montant=montant,
-        statut="En attente"
+        return jsonify({"error":"Non connecte"}),401
+    print("data =",data)
+    paiement= Paiement(
+        user_id=session["user_id"],
+        service=data["offre"],
+        prix=data["prix"],
+        moyen=data["moyenPaiement"],
+        nom_compte=data["nom"],
+        numero= data["numero"],
+        montant=data["montant"]
     )
     db.session.add(paiement)
     db.session.commit()
-
-    # on peut nettoyer la session (optionnel)
-    session.pop("service", None)
-    session.pop("prix", None)
-
-    return render_template("users/confirmation.html", message="Votre paiement a été enregistré et est en attente de vérification.")
-
-# Achat direct par lien (1 mois par défaut)
-# @app.route("/acheter/<service>")
-# def acheter(service):
-#     if "user_id" not in session:
-#         return redirect(url_for("connexion", next=url_for("acheter", service=service)))
-
-#     nouvel_abonnement = Abonnements(
-#         utilisateur_id=session["user_id"],
-#         service=service,
-#         statut=True,
-#         date_debut=datetime.utcnow(),
-#         date_fin=datetime.utcnow() + timedelta(days=30)
-#     )
-#     db.session.add(nouvel_abonnement)
-#     db.session.commit()
-#     return redirect(url_for("mon_abonnement"))
-
-# # Achat via popup AJAX (optionnel si tu ajoutes le popup côté front)
-# @app.route("/ajouter_abonnement", methods=["POST"])
-# def ajouter_abonnement():
-#     if "user_id" not in session:
-#         return jsonify({"success": False, "message": "Veuillez vous connecter."}), 401
-
-#     service = request.form.get("service", "Netflix")
-#     duree = int(request.form.get("duree", 30))
-
-#     abo = Abonnements(
-#         utilisateur_id=session["user_id"],
-#         service=service,
-#         statut=True,
-#         date_debut=datetime.utcnow(),
-#         date_fin=datetime.utcnow() + timedelta(days=duree)
-#     )
-#     db.session.add(abo)
-#     db.session.commit()
-#     return jsonify({"success": True, "user_id": session["user_id"]})
+    return jsonify({"success":True})
 
 # -------------------- CONTACT --------------------
 
