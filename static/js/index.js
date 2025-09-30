@@ -59,13 +59,14 @@ function choisirPaiement(moyen){
 document.getElementById("paiementForm").addEventListener("submit",
   function(e){
     e.preventDefault();
+    let form=e.target;
     let data={
       offre:document.getElementById("inputService").value,
       prix:document.getElementById("inputPrix").value,
       moyenPaiement:choix.moyenPaiement,
-      nom: this.nom.value,
-      numero:this.num.value,
-      montant:this.montant.value
+      nom: form.nom.value,
+      numero:form.numero.value,
+      montant:form.montant.value
     };
     fetch("/valider_paiement",{
       method:"POST",

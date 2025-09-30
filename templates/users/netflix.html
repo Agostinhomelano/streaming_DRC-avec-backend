@@ -296,7 +296,7 @@
           </p>
           <div class="nav-buttons">
             <button type="button" class="m" onclick="goToPage('page1')">Précédent</button>
-            <button type="button" class="m" onclick="submitPayment('mpesa')">Valider</button>
+            <button type="button" class="m" onclick="submitPayment('form-mpesa')">Valider</button>
           </div>
         </form>
       </div>
@@ -305,42 +305,46 @@
       <div class="page" id="page-airtel">
         <h2 id="service-titre" class="sevice" style="color:red;font-size: 25px;">Service Airtel Money</h2>
         <h3 class="h3">Envoyer vos frais d'abonnements en toutes securite et tres facilement.</h3>
-        <div class="input">
-          <div class="airtel-fields">
-            <input type="text" placeholder="Nom d'utilisateur Airtel Money" required name="nom">
-            <input type="number" placeholder="Numéro de compte Airtel Money" required name="num">
-            <input type="number" placeholder="Montant versé" required name="prix"><br>
+        <form id="form-airtel">
+          <div class="input">
+            <div class="airtel-fields">
+              <input type="text" placeholder="Nom d'utilisateur Airtel Money" required name="nom">
+              <input type="number" placeholder="Numéro de compte Airtel Money" required name="numero">
+              <input type="number" placeholder="Montant versé" required name="montant"><br>
+            </div>
           </div>
-        </div>
-        <p>Grace à ces informations nous allons verifier si c'est réelement vous qui avez envoyé le montant réquis.</p>
-        <p>cliquez ici pour copier ce numero et envoyer l'argent dans notre compte :  
-          <span class="numero" onclick="copyToClipboard(this)">0973251343</span>
-        </p>
-        <div class="nav-buttons">
-          <button class="m" onclick="goToPage('page1')">Précédent</button>
-          <button class="m" type="button" onclick="submitPayment('form-airtel')">Valider</button>
-        </div>
+          <p>Grace à ces informations nous allons verifier si c'est réelement vous qui avez envoyé le montant réquis.</p>
+          <p>cliquez ici pour copier ce numero et envoyer l'argent dans notre compte :  
+            <span class="numero" onclick="copyToClipboard(this)">0973251343</span>
+          </p>
+          <div class="nav-buttons">
+            <button class="m" onclick="goToPage('page1')">Précédent</button>
+            <button class="m" type="button" onclick="submitPayment('form-airtel')">Valider</button>
+          </div>
+        </form>
       </div>
 
       <!-- Page 2 Orange -->
       <div class="page" id="page-orange">
-        <h2 class="sevice" style="color:orange;font-size: 25px;">Service Orange Money</h2>
+        <h2 id="service-titre" class="sevice" style="color:orange;font-size: 25px;">Service Orange Money</h2>
         <h3 class="h3">Envoyer vos frais d'abonnements en toutes securite et tres facilement.</h3>
-        <div class="input">
-          <div class="orange-fields">
-            <input type="text" placeholder="Nom d'utilisateur Orange Money" required name="nom">
-            <input type="number" placeholder="Numéro de compte Orange Money" required name="num">
-            <input type="number" placeholder="Montant versé" required name="prix"><br>
+        <form id="form-orange">
+          <div class="input">
+            <div class="orange-fields">
+              <input type="text" placeholder="Nom d'utilisateur Orange Money" required name="nom">
+              <input type="number" placeholder="Numéro de compte Orange Money" required name="numero">
+              <input type="number" placeholder="Montant versé" required name="montant"><br>
+            </div>
           </div>
-        </div>
-        <p>Grace à ces informations nous allons verifier si c'est réelement vous qui avez envoyé le montant réquis.</p>
-        <p>cliquez ici pour copier ce numero et envoyer l'argent dans notre compte : 
-          <span class="numero" onclick="copyToClipboard(this)" style="color: orange;">0973251343</span>
-        </p>
-        <div class="nav-buttons">
-          <button class="o" onclick="goToPage('page1')">Précédent</button>
-          <button class="o" type="button" onclick="submitPayment('form-orange')">Valider</button>
-        </div>
+          <p>Grace à ces informations nous allons verifier si c'est réelement vous qui avez envoyé le montant réquis.</p>
+          <p>cliquez ici pour copier ce numero et envoyer l'argent dans notre compte : 
+            <span class="numero" onclick="copyToClipboard(this)" style="color: orange;">0973251343</span>
+          </p>
+          <div class="nav-buttons">
+            <button class="o" onclick="goToPage('page1')">Précédent</button>
+            <button class="o" type="button" onclick="submitPayment('form-orange')">Valider</button>
+          </div>
+        </form>
       </div>
 
       <!-- Page 3 Confirmation -->

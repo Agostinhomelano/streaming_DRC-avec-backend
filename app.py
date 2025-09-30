@@ -61,7 +61,7 @@ class Paiement(db.Model):
     nom_compte=db.Column(db.String(50), nullable=False)
     numero=db.Column(db.String(20), nullable=False)
     montant=db.Column(db.Float, nullable=False)
-    statut = db.Column(db.Boolean, default="En attente")
+    statut = db.Column(db.Boolean, default=False)
     date_paiement = db.Column(db.DateTime, default=datetime.utcnow)
     utilisateur=db.relationship("Utilisateurs", backref="paiememts",lazy=True)
 
@@ -74,6 +74,23 @@ def init_base():
             print("Taches initiales ajoutees.")
         else:
             print("La base contient deja des donnes.")
+        if Paiement.query.first() is None:
+            new_paiement= Paiement(
+            utilisateur_id=1,
+            service="Netflix Premium",
+            moyen="M-Pesa",
+            nom_compte="ODIA KALONJI AGOSTIONHO ",
+            numero= "0973251343",
+            montant="12000",
+            statut=True,
+            date_paiement=datetime.now()
+            )
+            db.session.add(new_paiement)
+            db.session.commit()
+            print("paiement ajoutees.")
+        else:
+            print("La base contient deja des donnes.")
+        
 
 # -------------------- PAGES PUBLIQUES --------------------
 
@@ -214,27 +231,33 @@ def mon_abonnement():
     abonnements = Abonnements.query.filter_by(utilisateur_id=session["user_id"]).order_by(Abonnements.date_fin.desc()).all()
     return render_template("users/mon_abonnement.html", abonnements=abonnements, session=session)
 
-
-
-
 @app.route("/valider_paiement", methods=["POST"])
 def valider_paiement():
     data =request.get_json()
+    print("=== DEBUG ===")
+    print("Session user_id:",session.get("user_id"))
+    print("Data recu:",data)
+    print("============")
     if "user_id" not in session:
         return jsonify({"error":"Non connecte"}),401
     print("data =",data)
-    paiement= Paiement(
-        user_id=session["user_id"],
-        service=data["offre"],
-        prix=data["prix"],
-        moyen=data["moyenPaiement"],
-        nom_compte=data["nom"],
-        numero= data["numero"],
-        montant=data["montant"]
+    new_paiement= Paiement(
+        utilisateur_id=session["user_id"],
+        service=data.get("offre"),
+        # prix=data.get("prix"),
+        moyen=data.get("moyenPaiement"),
+        nom_compte=data.get("nom"),
+        numero= data.get("numero"),
+        montant=float(data.get("montant")),
+        statut=True,
+        date_paiement=datetime.now()
     )
-    db.session.add(paiement)
+    db.session.add(new_paiement)
     db.session.commit()
-    return jsonify({"success":True})
+    return jsonify({"success":True,
+                    "message":"paiement enregistre avec succes",
+                    "id":new_paiement.id
+                    })
 
 # -------------------- CONTACT --------------------
 
