@@ -49,31 +49,14 @@
           <h2>{{abo.service}}</h2>
           <p>Statut : <span class="statut">{{ "Actif" if abo.statut else "Inactif" }}</span></p>
           <p>Prochain paiement : <span class="date">{{ abo.date_fin.strftime("%d/%m/%Y") if abo.date_fin else "-"}}</span></p>
-          <p>jours restants : {{a.jours_restants}}</p>
-          <div class="bouton"><a class="btn prim" href="#">Gérer</a></div>
+          <p>jours restants : {{abo.jours_restants}}</p>
+          <!-- <div class="bouton"><a class="btn prim" href="#">Gérer</a></div> -->
+           </div>
           {% endfor %}
           {% else %}
           <p>Aucun abonnement trouvé.</p>
-          {% endif %}
+      {% endif %}
         </div>
-        <!-- <div class="abonnement-card prime">
-          <h2>Prime Video</h2>
-          <p>Statut : <span class="statut">Inactif</span></p>
-          <p>Prochain paiement : <span class="date">-</span></p>
-          <div class="bouton"><a class="btn2" href="#">Souscrire</a></div>
-        </div>
-        <div class="abonnement-card iptv">
-          <h2>IPTV</h2>
-          <p>Statut : <span class="statut">Actif</span></p>
-          <p>Prochain paiement : <span class="date">15/09/2025</span></p>
-          <div class="bouton"><a class="btn prim" href="#">Gérer</a></div>
-        </div>
-        <div class="abonnement-card prime">
-          <h2>Pack netflix & prime video</h2>
-          <p>Statut : <span class="statut">Actif</span></p>
-          <p>Prochain paiement : <span class="date">15/09/2025</span></p>
-          <div class="bouton"><a class="btn prim" href="#">Gérer</a></div>
-        </div> -->
     </div>
   </div>
   <footer>

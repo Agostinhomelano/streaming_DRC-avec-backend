@@ -216,39 +216,38 @@ def formulaire_paiement():
         "prime_video":["prime_video classique","prime_video fidélité","prime_video economie","prime_video VIP"],
         "iptv":["iptv pour 3 mois","iptv pour 6 mois","iptv pour 12 mois"],
     }
+    # ...existing code...
     if request.method == "POST":
-        service=request.form['service']
-        moyen=request.form['moyen']
-        nom_compte=request.form['nom_compte']
-        numero=request.form['numero']
-        montant=request.form['montant']
+        service_choisi = request.form['service']
+        moyen = request.form['moyen']
+        nom_compte = request.form['nom_compte']
+        numero = request.form['numero']
+        montant = request.form['montant']
 
-         # Vérification : abonnement actif pour ce service ?
-        abonnement_actif = Abonnements.query.filter(
-            Abonnements.utilisateur_id == session["user_id"],
-            Abonnements.service == service[0],  # service principal
-            Abonnements.date_fin >= datetime.utcnow(),
-            Abonnements.statut == True
+        # Vérification : abonnement actif pour ce service ?
+        # Vérification : abonnement déjà existant pour ce nom et ce service ?
+        abonnement_existe = Abonnements.query.join(Utilisateurs).filter(
+            Utilisateurs.nom == session["nom"],
+            Abonnements.service == service_choisi
         ).first()
-        if abonnement_actif:
-            erreur = "Vous avez déjà un abonnement actif pour ce service. Veuillez attendre la fin de votre abonnement actuel avant de payer à nouveau."
-            return render_template("users/paiement.html", session=session, service=service, erreur=erreur)
-
-        new_paiement= Paiement(
-        utilisateur_id=session["user_id"],
-        service=service,
-        moyen=moyen,
-        nom_compte=nom_compte,
-        numero= numero,
-        montant=montant,
-        statut=True,
-        date_paiement=datetime.now()
+        if abonnement_existe:
+            erreur = "Vous avez déjà souscrit à ce service. Paiement refusé."
+            return render_template("users/paiement.html", session=session, service=service, erreur=erreur, retour=page_precedentes())
+        new_paiement = Paiement(
+            utilisateur_id=session["user_id"],
+            service=service_choisi,
+            moyen=moyen,
+            nom_compte=nom_compte,
+            numero=numero,
+            montant=montant,
+            statut=True,
+            date_paiement=datetime.now()
         )
         db.session.add(new_paiement)
         db.session.commit()
-        return render_template("users/confirmation.html",h1=h1,p1=p1,p2=p2,retour=page_precedentes(), m=m)
-    return render_template("users/paiement.html",session=session,service=service,retour=page_precedentes())
-
+        return render_template("users/confirmation.html", h1=h1, p1=p1, p2=p2, retour=page_precedentes(), m=m)
+    return render_template("users/paiement.html", session=session, service=service, retour=page_precedentes())
+# ...existing code...
 @app.route("/admin/valider_paiement/<int:id>", methods=["POST","GET"])
 def valider_paiement(id):
     paiement=Paiement.query.get_or_404(id)
