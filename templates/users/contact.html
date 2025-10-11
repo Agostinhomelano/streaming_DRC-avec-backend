@@ -86,7 +86,7 @@
 
         <form  class="contact-form" action="{{url_for('contacts')}}" method="POST">
             <input type="text" name="nom" placeholder="Votre nom" required>
-            <input type="tel" name="tel" placeholder="Numero WhatsApp" minlength="10" maxlength="10" title="Il faut 10 caracteres" required>
+            <input type="tel" name="tel" pattern="^\+243[0-9]{9}$" placeholder="Numero WhatsApp +234 xx xx xx xxx" minlength="10" required>
             <textarea name="message" rows="5" placeholder="Laiser un commentaire " required></textarea>
             <div class="button">
                 <button type="submit">Envoyer</button>

@@ -264,3 +264,102 @@
   </script>
 </body>
 </html>
+----------formulaire superposer----------------
+  <div id="overlay" class="overlay">
+    <div class="modal">
+      <span class="close" onclick="closeModal()">&times;</span>
+      <!-- Page 1 -->
+      <div class="page active" id="page1">
+        <h2>Choisissez un moyen de paiement</h2>
+        <form action="{{url_for('valider_paiement')}}" method="post" id="form-achat">
+          <input type="hidden" name="service" id="inputService">
+          <input type="hidden" name="prix" id="inputPrix">
+          <p id="offreChoisie"></p>
+        </form>
+        <div class="boutons">
+          <button class="div one" onclick="choisirPaiement('M-Pesa');nextPage('mpesa');return false;"><div>M-Pesa</div></button>
+          <button class="div two" onclick="nextPage('airtel'); return false;"><div>Airtel Money</div></button>
+          <button class="div tree" onclick="nextPage('orange'); return false;"><div>Orange Money</div></button>
+        </div>
+      </div>
+      <!-- Page 2 M-Pesa -->
+      <div class="page" id="page-mpesa">
+        <h2 id="service-titre" class="sevice" style="color:red ;font-size: 30px;">Service M-Pesa</h2>
+        <h3 class="h3">Envoyer vos frais d'abonnements en toutes securite et tres facilement.</h3>
+        <form id="form-mpesa">
+          <div class="input">
+            <div class="mpesa-fields">
+              <input type="text" placeholder="Nom d'utilisateur m-pesa" required name="nom">
+              <input type="number" placeholder="Numéro de compte M-Pesa" required name="numero">
+              <input type="number" placeholder="Montant versé" required name="montant"><br>
+            </div>
+          </div>
+          <p>Grace à ces informations nous allons verifier si c'est réelement vous qui avez envoyé le montant réquis.</p>
+          <p>cliquez ici pour copier ce numero et envoyer l'argent dans notre compte : 
+            <span class="numero" onclick="copyToClipboard(this)">0973251343</span>
+          </p>
+          <div class="nav-buttons">
+            <button type="button" class="m" onclick="goToPage('page1')">Précédent</button>
+            <button type="button" class="m" onclick="submitPayment('form-mpesa')">Valider</button>
+          </div>
+        </form>
+      </div>
+
+      <!-- Page 2 Airtel -->
+      <div class="page" id="page-airtel">
+        <h2 id="service-titre" class="sevice" style="color:red;font-size: 25px;">Service Airtel Money</h2>
+        <h3 class="h3">Envoyer vos frais d'abonnements en toutes securite et tres facilement.</h3>
+        <form id="form-airtel">
+          <div class="input">
+            <div class="airtel-fields">
+              <input type="text" placeholder="Nom d'utilisateur Airtel Money" required name="nom">
+              <input type="number" placeholder="Numéro de compte Airtel Money" required name="numero">
+              <input type="number" placeholder="Montant versé" required name="montant"><br>
+            </div>
+          </div>
+          <p>Grace à ces informations nous allons verifier si c'est réelement vous qui avez envoyé le montant réquis.</p>
+          <p>cliquez ici pour copier ce numero et envoyer l'argent dans notre compte :  
+            <span class="numero" onclick="copyToClipboard(this)">0973251343</span>
+          </p>
+          <div class="nav-buttons">
+            <button class="m" onclick="goToPage('page1')">Précédent</button>
+            <button class="m" type="button" onclick="submitPayment('form-airtel')">Valider</button>
+          </div>
+        </form>
+      </div>
+
+      <!-- Page 2 Orange -->
+      <div class="page" id="page-orange">
+        <h2 id="service-titre" class="sevice" style="color:orange;font-size: 25px;">Service Orange Money</h2>
+        <h3 class="h3">Envoyer vos frais d'abonnements en toutes securite et tres facilement.</h3>
+        <form id="form-orange">
+          <div class="input">
+            <div class="orange-fields">
+              <input type="text" placeholder="Nom d'utilisateur Orange Money" required name="nom">
+              <input type="number" placeholder="Numéro de compte Orange Money" required name="numero">
+              <input type="number" placeholder="Montant versé" required name="montant"><br>
+            </div>
+          </div>
+          <p>Grace à ces informations nous allons verifier si c'est réelement vous qui avez envoyé le montant réquis.</p>
+          <p>cliquez ici pour copier ce numero et envoyer l'argent dans notre compte : 
+            <span class="numero" onclick="copyToClipboard(this)" style="color: orange;">0973251343</span>
+          </p>
+          <div class="nav-buttons">
+            <button class="o" onclick="goToPage('page1')">Précédent</button>
+            <button class="o" type="button" onclick="submitPayment('form-orange')">Valider</button>
+          </div>
+        </form>
+      </div>
+
+      <!-- Page 3 Confirmation -->
+      <div class="page" id="page3">
+        <h2>Merci de nous avoir fais confiance !</h2>
+        <p>Votre abonnement est en cours de traitement.</p>
+        <p>Vous recevrez une notification et un message WhatsApp si tout s'est bien passé.</p>
+        <div class="nav-buttons">
+          <button type="submit" class="m" onclick="closeModal()">Quitter</button>
+        </div>
+      </div>
+
+    </div>
+  </div>

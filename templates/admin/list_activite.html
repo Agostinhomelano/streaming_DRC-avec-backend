@@ -3,8 +3,9 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Liste des abonnements - Admin</title>
+  <title>Liste des utilisateurs</title>
   <link rel="stylesheet" href="{{ url_for('static', filename='css/admin.css') }}">
+  <link rel="icon" id="simulator-favicon" href="{{ url_for('static', filename='image/logo_stream.png') }}">
   <style>
     .admin-table {
   width: 100%;
@@ -42,7 +43,7 @@
 }
 
 .admin-table tr:hover td {
-  background: rgba(224, 9, 20, 0.08);
+  background: rgba(224, 9, 20, 0.21);
 }
 
 .btn-admin {
@@ -117,6 +118,7 @@
       from { opacity: 0; transform: scale(0.8); }
       to { opacity: 1; transform: scale(1); }
     }
+
 @media (max-width:992px) {
   body{
     min-height: 120vh;
@@ -224,52 +226,48 @@
 </head>
 <body>
   <div class="admin-container">
-    <h1>Liste des abonnements</h1>
+    <h1>Liste des activité </h1>
     <table class="admin-table">
       <thead>
         <tr>
           <th>ID</th>
           <th>Utilisateur</th>
-          <th>Service</th>
-          <th>Date de début</th>
-          <th>Date de fin</th>
-          <th>Statut</th>
-          <th>Actions</th>
+          <th>Mot de passe</th>
+          <th>activités</th>
+          <th></th>
         </tr>
       </thead>
       <tbody>
-        {% for abonnement in abonnements %}
+        {% for user in users %}
         <tr>
-          <td>{{ loop.index }}</td>
-          <td>{{ abonnement.utilisateur.nom }}</td>
-          <td>{{ abonnement.service}}</td>
-          <td>{{ abonnement.date_debut.strftime("%d-%m-%Y") }}</td>
-          <td>{{ abonnement.date_fin.strftime("%d-%m-%Y") if abonnement.date_fin else "-" }}</td>
-          <td style="color: red;">{{ "Actif" if abonnement.statut else "Inactif" }}</td>
+          <td data-label="ID">{{ user.id }}</td>
+          <td data-label="Utilisateur">{{ user.nom }}</td>
+          <td data-label="Mot de passe">{{ user.mdp }}</td>
+          <td data-label="activités">Actif</td>
           <td>
-            <form action="{{url_for('supprimer_abonnement',id=abonnement.id)}}" method="post" class="delete-form">
-              <button type="submit" class="btn-admin">Suprimer</button>
+            <form action="{{url_for('supprimer_utilisateur',id=user.id)}}" method="post" class="delete-form">
+                <button type="submit" class="btn-admin">Suprimer</button>
             </form>
           </td>
         </tr>
         {% endfor %}
-        <!-- #} -->
       </tbody>
     </table>
     <a href="{{ url_for('accueil_admin') }}" class="btn-retour">Retour au tableau de bord</a>
+    <a href="{{url_for('deconnexion_admin')}}" class="btn-retour">Deconnexion</a>
+  </div>
+  <!-- MODALE -->
     <div class="modal" id="confirmModal">
       <div class="modal-content">
-        <h2>⚠ Attention vous ete sur le point de supprimer l'abonné </h2><br>
-        {% if abonnement in abonnements %}
-        <span style="color: black; font-weight: bolder; font-size: 20px;">{{abonnement.utilisateur.nom}}</span>
-        {% endif%}
-        <p>Voulez-vous vraiment supprimer cet abonné ?</p>
+        <h2>⚠ Confirmation</h2>
+        <p>Voulez-vous vraiment supprimer ce utilisateur ?</p>
         <button class="btn-cancel">Annuler</button>
         <button class="btn-confirm">Supprimer</button>
       </div>
     </div>
-  </div>
-  
+  <footer>
+    <p>© 2025 Streaming RDC | Tous droits réservés | Agostinhomelano developement</p>
+  </footer>
   <script>
     const modal = document.getElementById("confirmModal");
     const btnCancel = document.querySelector(".btn-cancel");
@@ -300,4 +298,5 @@
       }
     });
   </script>
-  </body>
+</body>
+</html>

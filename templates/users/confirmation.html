@@ -7,11 +7,13 @@
   <link rel="stylesheet" href="{{ url_for('static', filename='css/confirmation.css') }}">
 </head>
 <body>
+  {% if h1,p1,p2,m %}
   <div class="confirmation-container">
-    <h1>Merci pour votre commentaire !</h1>
-    <p>Votre message a bien été envoyé.<br>
-    Nous vous répondrons dans les plus brefs délais.</p>
-    <a href="{{ url_for('contacts') }}" class="btn-retour">Ajouter encore un commentaire?</a>
+    <h1>{{h1}}!</h1>
+    <p>{{p1}}<br>
+    {{p2}}<p>
+    <a href="{{retour}}" class="btn-retour">{{m}}</a>
     <a href="{{ url_for('accueil') }}" class="btn-retour">Retour à l'accueil</a>
   </div>
+  {% endif%}
 </body>

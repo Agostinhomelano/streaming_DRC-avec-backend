@@ -74,23 +74,9 @@ def init_base():
             print("Taches initiales ajoutees.")
         else:
             print("La base contient deja des donnes.")
-        if Paiement.query.first() is None:
-            new_paiement= Paiement(
-            utilisateur_id=1,
-            service="Netflix Premium",
-            moyen="M-Pesa",
-            nom_compte="ODIA KALONJI AGOSTIONHO ",
-            numero= "0973251343",
-            montant="12000",
-            statut=True,
-            date_paiement=datetime.now()
-            )
-            db.session.add(new_paiement)
-            db.session.commit()
-            print("paiement ajoutees.")
-        else:
-            print("La base contient deja des donnes.")
-        
+def page_precedentes():
+    page_precedente= request.referrer or url_for('accueil')#permet de recuperer la page precedente pour le bouton retour   
+    return page_precedente
 
 # -------------------- PAGES PUBLIQUES --------------------
 
@@ -217,12 +203,84 @@ def deconnexion_admin():
 
 # -------------------- ABONNEMENTS (USER) --------------------
 
-@app.route("/formulaire d'achat")
+@app.route("/formulaire d'achat", methods=['POST','GET'])
 def formulaire_achat():
     if 'user_id' not in session:
         return redirect(url_for('connexion', next=url_for('formulaire_achat')))
     return render_template("users/formulaire.html", session=session)
 
+@app.route("/Formulaire_de_paiement", methods=['POST','GET'])
+def formulaire_paiement():
+    h1="Merci pour votre confiance !"
+    p1="Votre paiement a bien été envoyé."
+    p2="Nous vous répondrons dans les plus brefs délais."
+    m="Retour"
+    if 'user_id' not in session:
+        return redirect(url_for('connexion',next=url_for('formulaire_paiement')))
+    service={
+        "netflix":["Netflix classique","Netflix fidélité","Netflix economie","Netflix VIP"],
+        "prime_video":["prime_video classique","prime_video fidélité","prime_video economie","prime_video VIP"],
+        "iptv":["iptv pour 3 mois","iptv pour 6 mois","iptv pour 12 mois"],
+    }
+    if request.method == "POST":
+        service=request.form['service']
+        moyen=request.form['moyen']
+        nom_compte=request.form['nom_compte']
+        numero=request.form['numero']
+        montant=request.form['montant']
+
+         # Vérification : abonnement actif pour ce service ?
+        abonnement_actif = Abonnements.query.filter(
+            Abonnements.utilisateur_id == session["user_id"],
+            Abonnements.service == service[0],  # service principal
+            Abonnements.date_fin >= datetime.utcnow(),
+            Abonnements.statut == True
+        ).first()
+        if abonnement_actif:
+            erreur = "Vous avez déjà un abonnement actif pour ce service. Veuillez attendre la fin de votre abonnement actuel avant de payer à nouveau."
+            return render_template("users/paiement.html", session=session, service=service, erreur=erreur)
+
+        new_paiement= Paiement(
+        utilisateur_id=session["user_id"],
+        service=service,
+        moyen=moyen,
+        nom_compte=nom_compte,
+        numero= numero,
+        montant=montant,
+        statut=True,
+        date_paiement=datetime.now()
+        )
+        db.session.add(new_paiement)
+        db.session.commit()
+        return render_template("users/confirmation.html",h1=h1,p1=p1,p2=p2,retour=page_precedentes(), m=m)
+    return render_template("users/paiement.html",session=session,service=service,retour=page_precedentes())
+
+@app.route("/admin/valider_paiement/<int:id>", methods=["POST","GET"])
+def valider_paiement(id):
+    paiement=Paiement.query.get_or_404(id)
+    nouvel_abonnement=Abonnements(
+        utilisateur_id=paiement.utilisateur_id,
+        service=paiement.service,
+        date_debut=datetime.utcnow(),
+        date_fin=datetime.utcnow()+timedelta(days=30),
+        statut=True
+        )
+    db.session.add(nouvel_abonnement)
+    db.session.delete(paiement)
+    db.session.commit()
+    print("c'est bon tout marche bien")
+    return redirect(url_for('liste_paiement'))
+
+@app.route("/admin/liste_paiement/supprimer_paiement/<int:id>", methods=["POST", "GET"])
+def supprimer_paiement(id):
+    paiement=Paiement.query.get(id)
+    if not paiement:
+      flash("Paiement introuvable","danger")
+      return redirect(url_for("liste_paiement"))
+    db.session.delete(paiement)
+    db.session.commit()
+    flash("paiement Suprimer")
+    return redirect(url_for('liste_paiement'))
 
 @app.route("/mon_abonnement")
 def mon_abonnement():
@@ -231,38 +289,14 @@ def mon_abonnement():
     abonnements = Abonnements.query.filter_by(utilisateur_id=session["user_id"]).order_by(Abonnements.date_fin.desc()).all()
     return render_template("users/mon_abonnement.html", abonnements=abonnements, session=session)
 
-@app.route("/valider_paiement", methods=["POST"])
-def valider_paiement():
-    data =request.get_json()
-    print("=== DEBUG ===")
-    print("Session user_id:",session.get("user_id"))
-    print("Data recu:",data)
-    print("============")
-    if "user_id" not in session:
-        return jsonify({"error":"Non connecte"}),401
-    print("data =",data)
-    new_paiement= Paiement(
-        utilisateur_id=session["user_id"],
-        service=data.get("offre"),
-        # prix=data.get("prix"),
-        moyen=data.get("moyenPaiement"),
-        nom_compte=data.get("nom"),
-        numero= data.get("numero"),
-        montant=float(data.get("montant")),
-        statut=True,
-        date_paiement=datetime.now()
-    )
-    db.session.add(new_paiement)
-    db.session.commit()
-    return jsonify({"success":True,
-                    "message":"paiement enregistre avec succes",
-                    "id":new_paiement.id
-                    })
-
 # -------------------- CONTACT --------------------
 
 @app.route("/Contact", methods=['POST','GET'])
 def contacts():
+    h1="Merci pour votre commentaire !"
+    p1="Votre message a bien été envoyé."
+    p2="Nous vous répondrons dans les plus brefs délais."
+    m="Ajouter encore un commentaire?"
     if request.method == "POST":
         nom = request.form.get('nom')
         tel = request.form['tel']
@@ -270,7 +304,7 @@ def contacts():
         nouveau_commentaire = Commentaire(nom=nom, tel=tel, message=message)
         db.session.add(nouveau_commentaire)
         db.session.commit()
-        return render_template("users/confirmation.html")
+        return render_template("users/confirmation.html",h1=h1,p1=p1,p2=p2,retour=page_precedentes(),m=m)
     return render_template("users/contact.html")
 
 @app.route("/confirmation")
@@ -301,8 +335,17 @@ def supprimer_utilisateur(id):
 @app.route("/liste_abonnements")
 def list_abonnements():
     # route conservée telle quelle (ta page admin)
+    num=1
     abonnements = Abonnements.query.order_by(Abonnements.date_fin.desc()).all()
-    return render_template("admin/list_abonnement.html", abonnements=abonnements)
+    return render_template("admin/list_abonnement.html", abonnements=abonnements,num=num)
+
+@app.route("/admin/liste_abonnements/supprimer_abonnement/<int:id>", methods=["POST", "GET"])
+def supprimer_abonnement(id):
+    abonnement = Abonnements.query.get_or_404(id)
+    db.session.delete(abonnement)
+    db.session.commit()
+    flash("abonnement Suprimer")
+    return redirect(url_for('list_abonnements'))
 
 @app.route("/admin/liste_commentaires")
 def liste_commentaires():
@@ -316,6 +359,15 @@ def supprimer_commentaire(id):
         db.session.delete(commentaire)
         db.session.commit()
     return redirect(url_for('liste_commentaires'))
+
+@app.route("/admin/liste_paiement")
+def liste_paiement():
+    paiements = Paiement.query.order_by(Paiement.date_paiement.desc()).all()
+    return render_template("admin/liste_paiement.html", paiements=paiements)
+
+@app.route("/admin/list_activite")
+def list_activite():
+    return render_template("admin/list_activite.html")
 
 # -------------------- RUN --------------------
 

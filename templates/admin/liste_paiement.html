@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Liste des abonnements - Admin</title>
+  <title>Liste des paiement - Admin</title>
   <link rel="stylesheet" href="{{ url_for('static', filename='css/admin.css') }}">
   <style>
     .admin-table {
@@ -26,6 +26,7 @@
   color: #fff;
   font-weight: bold;
   font-size: 1rem;
+  text-align: center;
 }
 
 .admin-table tr {
@@ -117,6 +118,13 @@
       from { opacity: 0; transform: scale(0.8); }
       to { opacity: 1; transform: scale(1); }
     }
+    .num_a{
+      text-decoration: none;
+      color: #00A8E1;
+    }
+    .num_a:hover{
+      color: black;
+    }
 @media (max-width:992px) {
   body{
     min-height: 120vh;
@@ -145,7 +153,9 @@
         padding: 10px;
         width: 93%;
       }
-
+      .admin-table tr:hover td {
+        background: rgba(224, 9, 20, 0.21);
+      }
       .admin-table td {
         display: flex;
         justify-content:first baseline;
@@ -224,80 +234,85 @@
 </head>
 <body>
   <div class="admin-container">
-    <h1>Liste des abonnements</h1>
+    <h1>Liste des paiements</h1>
     <table class="admin-table">
       <thead>
         <tr>
           <th>ID</th>
           <th>Utilisateur</th>
           <th>Service</th>
-          <th>Date de début</th>
-          <th>Date de fin</th>
+          <th>moyen de paiement</th>
+          <th>nom du compte</th>
+          <th>numero du compte</th>
+          <th>montant versé</th>
           <th>Statut</th>
-          <th>Actions</th>
+          <th>Date du paiement</th>
+          <th></th>
         </tr>
       </thead>
       <tbody>
-        {% for abonnement in abonnements %}
+        {% for paiement in paiements %}
         <tr>
-          <td>{{ loop.index }}</td>
-          <td>{{ abonnement.utilisateur.nom }}</td>
-          <td>{{ abonnement.service}}</td>
-          <td>{{ abonnement.date_debut.strftime("%d-%m-%Y") }}</td>
-          <td>{{ abonnement.date_fin.strftime("%d-%m-%Y") if abonnement.date_fin else "-" }}</td>
-          <td style="color: red;">{{ "Actif" if abonnement.statut else "Inactif" }}</td>
+          <td>{{ paiement.utilisateur_id }}</td>
+          <td>{{ paiement.utilisateur.nom }}</td>
+          <td>{{ paiement.service}}</td>
+          <td>{{ paiement.moyen}}</td>
+          <td>{{ paiement.nom_compte}}</td>
+          <td><a class="num_a" href="https://wa.me/{{ paiement.numero}}" target="_blank">{{ paiement.numero}}</a></td>
+          <td>{{ paiement.montant}}</td>
+          <td style="color: rgb(202, 29, 29);">{{ "Actif" if paiement.statut else "Inactif" }}</td>
+          <td>{{ paiement.date_paiement.strftime("%Y-%m-%d") }}</td>          
           <td>
-            <form action="{{url_for('supprimer_abonnement',id=abonnement.id)}}" method="post" class="delete-form">
-              <button type="submit" class="btn-admin">Suprimer</button>
-            </form>
+            <button class="btn-admin btn-gerer btn-primary" data-bs-toggel="modal" data-bs-target="#modalPaiement" data-id="{{paiement.id}}" data-nom="{{ paiement.nom }}">Gérer</button>
           </td>
         </tr>
         {% endfor %}
-        <!-- #} -->
       </tbody>
     </table>
     <a href="{{ url_for('accueil_admin') }}" class="btn-retour">Retour au tableau de bord</a>
     <div class="modal" id="confirmModal">
       <div class="modal-content">
-        <h2>⚠ Attention vous ete sur le point de supprimer l'abonné </h2><br>
-        {% if abonnement in abonnements %}
-        <span style="color: black; font-weight: bolder; font-size: 20px;">{{abonnement.utilisateur.nom}}</span>
-        {% endif%}
-        <p>Voulez-vous vraiment supprimer cet abonné ?</p>
+        <h2>⚠ Confirmation</h2>
+        <p>Voulez-vous vraiment Valider ce paiement ?</p>
+        <button type="button" class="btn-admin btn-confirm">valider</button>
+        <button class="btn-admin btn-delete">Supprimer</button>
         <button class="btn-cancel">Annuler</button>
-        <button class="btn-confirm">Supprimer</button>
+        <!-- <button class="btn-confirm">Valider</button> -->
       </div>
-    </div>
   </div>
-  
   <script>
-    const modal = document.getElementById("confirmModal");
-    const btnCancel = document.querySelector(".btn-cancel");
-    const btnConfirm = document.querySelector(".btn-confirm");
-    let formToSubmit = null;
+  const modal = document.getElementById("confirmModal");
+  const btnCancel = modal.querySelector(".btn-cancel");
+  const btnConfirm = modal.querySelector(".btn-confirm");
+  const btnDelete = modal.querySelector(".btn-delete");
+  let paiementID = null;
 
-    // Pour chaque bouton supprimer
-    document.querySelectorAll(".delete-form").forEach(form => {
-      const btnDelete = form.querySelector(".btn-admin");
-
-      btnDelete.addEventListener("click", (e) => {
-        e.preventDefault();
-        formToSubmit = form;
-        modal.style.display = "flex";
-      });
+  // Pour chaque bouton "Gérer"
+  document.querySelectorAll(".btn-gerer").forEach(button => {
+    button.addEventListener("click", () => {
+      paiementID = button.getAttribute("data-id");
+      modal.style.display = "flex";
     });
+  });
 
-    // Fermer si on clique sur Annuler
-    btnCancel.addEventListener("click", () => {
-      modal.style.display = "none";
-      formToSubmit = null;
-    });
+  // Fermer si on clique sur Annuler
+  btnCancel.addEventListener("click", () => {
+    modal.style.display = "none";
+    paiementID = null;
+  });
 
-    // Valider et envoyer le formulaire si on clique sur Confirmer
-    btnConfirm.addEventListener("click", () => {
-      if (formToSubmit) {
-        formToSubmit.submit();
-      }
-    });
-  </script>
-  </body>
+  // Valider le paiement
+  btnConfirm.addEventListener("click", () => {
+    if (paiementID) {
+      window.location.href = `/admin/valider_paiement/${paiementID}`;
+    }
+  });
+
+  // Supprimer le paiement
+  btnDelete.addEventListener("click", () => {
+    if (paiementID) {
+      window.location.href = `/admin/liste_paiement/supprimer_paiement/${paiementID}`;
+    }
+  });
+</script>
+ </body>

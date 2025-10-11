@@ -26,9 +26,14 @@
         <a href="{{ url_for('list_abonnements') }}" class="btn-admin">Voir les abonnements</a>
       </div>
       <div class="admin-card">
-        <h2>Statistiques</h2>
+        <h2>Liste des paiement</h2>
+        <p>Voir les paiements</p>
+        <a href="{{ url_for('liste_paiement') }}" class="btn-admin">Voir les paiements</a>
+      </div>
+      <div class="admin-card">
+        <h2>Activités</h2>
         <p>Visualiser l'activité du site</p>
-        <a href="{{ url_for('contacts') }}" class="btn-admin">Voir les statistiques</a>
+        <a href="{{ url_for('list_activite') }}" class="btn-admin">Voir les activité</a>
       </div>
     </div>
     <a href="{{ url_for('accueil') }}" class="btn-retour">Retour au site</a>
