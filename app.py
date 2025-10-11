@@ -203,12 +203,6 @@ def deconnexion_admin():
 
 # -------------------- ABONNEMENTS (USER) --------------------
 
-@app.route("/formulaire d'achat", methods=['POST','GET'])
-def formulaire_achat():
-    if 'user_id' not in session:
-        return redirect(url_for('connexion', next=url_for('formulaire_achat')))
-    return render_template("users/formulaire.html", session=session)
-
 @app.route("/Formulaire_de_paiement", methods=['POST','GET'])
 def formulaire_paiement():
     h1="Merci pour votre confiance !"
