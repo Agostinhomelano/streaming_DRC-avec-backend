@@ -25,6 +25,7 @@
           <li><a class="a" href="{{url_for('netflix')}}">Netflix</a></li>
           <li><a class="b" href="{{url_for('prime_video')}}">Prime video</a></li>
           <li><a class="c" href="{{url_for('iptv')}}">IPTV</a></li>
+          <li><a class="e" href="{{url_for('crunchyroll')}}">Crunchyroll</a></li>
           <li><a class="d" href="{{url_for('contacts')}}">Contact</a></li>
         </ul>
         {% if session.nom %}
@@ -47,10 +48,15 @@
         {% for abo in abonnements%}
         <div class="abonnement-card netflix">
           <h2>{{abo.service}}</h2>
-          <p>Statut : <span class="statut">{{ "Actif" if abo.statut else "Inactif" }}</span></p>
+          <p>Statut : 
+            {% if abo.date_fin and abo.date_fin < now %}  
+            <span style="color: red;"> Inactif </span>
+            {% else %}
+            <span class="statut"> Actif</span>
+            {% endif %}
+          </p>
           <p>Prochain paiement : <span class="date">{{ abo.date_fin.strftime("%d/%m/%Y") if abo.date_fin else "-"}}</span></p>
           <p>jours restants : {{abo.jours_restants}}</p>
-          <!-- <div class="bouton"><a class="btn prim" href="#">Gérer</a></div> -->
            </div>
           {% endfor %}
           {% else %}

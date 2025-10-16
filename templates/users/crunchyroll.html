@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Streaming RDC</title>
+  <link rel="stylesheet" href="{{url_for('static',filename='css/style.css')}}">
+  <link rel="stylesheet" href="{{url_for('static',filename='css/netflix.css')}}">
+  <style>
+    .overlay {
+      display: none; 
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      background: rgba(0,0,0,0.6);
+      z-index: 1000;
+      justify-content: center;
+      align-items: center;
+    }
+    .modal {
+      background: rgb(208, 207, 207);
+      color:black;
+      padding: 20px;
+      width: 50%;
+      min-height: 60%;
+      border-radius: 10px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+      position: relative;
+    }
+    .close {
+      position: absolute;
+      top: 10px;
+      right: 15px;
+      font-size: 20px;
+      cursor: pointer;
+    }
+    .page { display: none; }
+    .page.active { display: block; }
+    #page3{text-align: center;}
+    .nav-buttons { margin-top: 15px; text-align: right; }
+    .boutons {
+      padding:10px ;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: center;
+      height: 100%;
+    }
+    .div {
+      border-radius: 15px;
+      margin-top:30px ;
+      transition: transform 0.3s;
+      text-align: center;
+      color: white;
+      font-size: 25px;
+      font-weight: bolder;
+      border: none;
+    }
+    .div:hover { transform: scale(1.05); }
+    .one { background:linear-gradient(135deg,red,rgba(0, 0, 0, 0.779)); width:47%; height: 200px;}
+    .two { background:linear-gradient(135deg,red,white); width: 47%; height: 200px; }
+    .tree { background:linear-gradient(125deg,Orange,black); width: 47%; height: 200px; }
+    .input{ display: flex; flex-direction: column; height: auto; }
+    input[type="text"],input[type="number"]{
+      height: 50px; margin-top: 10px;
+      width: 95%;
+      background-color: rgba(116, 116, 116, 0.301);
+      color: white; border: none; border-radius: 10px; padding: 10px ;
+    }
+    input::placeholder{ color: white; }
+    .numero{ cursor: pointer; color: red; }
+    .butn{ background-color: red; border: none; border-radius: 10px; height: 30px; }
+    .butn-a{
+      background-color: red;
+      border: none; 
+      border-radius: 10px; 
+      height: 25px; 
+      width: 80px;
+      text-decoration: none; 
+      text-align: center;
+      padding: 5px 0 0 0;
+      margin: 10px;
+      color: black;
+    }
+    .butn-a:hover{
+      background-color: white;
+      color: red;
+    }
+    .butn:hover{ background-color: aliceblue; color:red; }
+    .m{ background-color: red; border: none; border-radius: 5px; padding: 10px; }
+    .m:hover{ background-color: white; color: red; }
+    .o{ background-color: orange; border: none; border-radius: 5px; padding: 10px; }
+    .o:hover{ background-color: white; color: orange; }
+    h1{ text-align: center; }
+    .h3{
+      margin-bottom: 20px;
+    }
+    @media (max-width:900px) {
+      .modal{
+        width: 70%;
+      }
+      }
+    @media (max-width:500px) {
+      .modal{
+        width: 100%;
+      }
+      .boutons{
+        flex-wrap: wrap;
+      }
+      h1{
+        font-size: 50px;
+      }
+      p{
+        font-size: 20px;
+      }
+      .butn{ 
+        border-radius: 15px; 
+        height: 60px; 
+        width: 30%;
+        font-size: 30px;
+      }
+    .butn-a{
+      border-radius: 15px; 
+      height: 50px; 
+      width: 30%;
+      text-decoration: none; 
+      text-align: center;
+      padding: 5px 0 0 0;
+      margin: 15px;
+      color: black;
+      font-size: 30px;
+    }
+    .pnum{
+      margin: 30px 0;
+    }
+    .sevice{
+      padding-bottom: 10px;
+    }
+    .input{
+      padding-bottom: 15px;
+    }
+    .page p{
+      font-size:15px ;
+    }
+    }
+    @media (max-width:350px) {
+      .modal{
+        width: 80%;
+        height: 100%;
+      }
+      .div{
+        width: 100%;
+        height: 120px;
+        margin-top: 15px;
+      }
+      .boutons{
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: space-between;
+      }
+      .input{
+        padding-bottom: 5px;
+      }
+      .h3{
+        margin-bottom: 0;
+      }
+    }
+
+  </style>
+</head>
+<body>
+  <!-- HEADER -->
+  <nav>
+    <div class="container-fluid">
+      <!-- Logo -->
+      <div class="container-logo">
+        <img class="logo_stream2" src="{{url_for('static',filename='image/img12.jpg')}}" alt="">
+        <a href="#" class="site-title">STREAMING RDC</a>
+      </div>
+      <!-- Menu burger -->
+      <button class="burger" id="burgerBtn" aria-label="Ouvrir le menu">&#9776;</button>
+      <!-- Menu principal -->
+      <div class="menu" id="menuNav">
+        <ul>
+        <li><a class="d" href="{{url_for('accueil')}}">Acceuil</a></li>
+        <li><a class="a" href="{{url_for('netflix')}}">Netflix</a></li>
+        <li><a class="c" href="{{url_for('iptv')}}">IPTV</a></li>
+        <li><a class="b" href="{{url_for('prime_video')}}">Prime video</a></li>
+        <li><a class="d" href="{{url_for('mon_abonnement')}}">Mon abonnements</a></li>
+        <li><a class="d" href="{{url_for('contacts')}}">Contact</a></li>
+        </ul>
+        {% if session.nom %}
+        <div class="menu-btns">
+          <a href="{{url_for('deconnexion')}}"><button class="btn_2">Deconnexion</button></a>
+        </div>
+        {% else %}
+        <div class="menu-btns">
+          <a href="{{url_for('inscription')}}"><button class="btn_2">Connexion</button></a>
+        </div>
+        {% endif %}
+      </div>
+    </div>
+  </nav>
+  <section class="of">
+    <div class="tele"><img src="{{url_for('static',filename='image/img28.jpeg')}}" alt=""></div>
+    <div class="titre">
+      <h2 style="color: rgb(216, 143, 8);">Abonnements Crunchyroll au meilleurs prix</h2>
+      <p>Profitez de vos meilleurs annimée sans exception en toute securité</p>
+      <p>sur vos smart phone et votre smart tv</p>
+      <p>avec crunchyroll vous avez accès à tout les annimée du monde</p>
+      <h3>suivez en toute securite vos annimée :</h3>
+      <ul>
+        <li>amours</li>
+        <li>actions</li>
+        <li>frissons</li>
+      </ul>
+    </div>
+  </section>
+  <aside style="background-color: rgb(215, 116, 2);">
+    <div class="cont" >
+      <h2 style="color: rgb(249, 249, 247);">Profitez de la meilleurs offre d'abonnements a un prix reduit <h2>
+      <p> netflix marche sur tout types d'ecrants</p>
+      <p>En companie de votre famille est amis a des tres petit prix</p>
+      <p>Netflix à un tel prix ! null part en afrique.</p>
+    </div>
+    <div class="tele">
+      <img src="{{url_for('static',filename='image/img33.png')}}" alt="">
+    </div>
+  </aside>
+  <h1 class="h1">Nos Abonnements</h1>
+  <div class="abonement_grie">
+    <div class="offre" style="background-color: white;">
+      <img src="{{url_for('static',filename='image/img37.jpeg')}}" alt="">
+      <p style="color: black;">classique</p>
+      <p style="color: black;">1 mois</p>
+      <p style="color: black;">Prix: <span style="color: orange;">4$</span></p>
+      <a style="background-color: rgb(215, 116, 2);" href="{{url_for('formulaire_de_paiement_crun')}}" class="btn_2" >Acheter</a>
+    </div>
+    <div class="offre" style="background-color: white;">
+      <img src="{{url_for('static',filename='image/img37.jpeg')}}" alt="">
+      <p style="color: black;">Fidélité</p>
+      <p style="color: black;">2 mois</p>
+      <p style="color: black;">prix:<span>7.5$</span></p>
+      <a style="background-color: rgb(215, 116, 2);" href="{{url_for('formulaire_de_paiement_crun')}}" class="btn_2" >Acheter</a>
+    </div>
+    <div class="offre" style="background-color: white;">
+      <img src="{{url_for('static',filename='image/img37.jpeg')}}" alt="">
+      <p style="color: black;">Economie</p>
+      <p style="color: black;">3 mois</p>
+      <p style="color: black;">prix:<span>10.5$</span></p>
+      <a style="background-color: rgb(215, 116, 2);" href="{{url_for('formulaire_de_paiement_crun')}}" class="btn_2" >Acheter</a>
+    </div>
+  </div>
+
+  <!-- FOOTER -->
+  <footer>
+    <p>© 2025 Streaming RDC | Tous droits réservés | Agostinhomelano developement</p>
+  </footer>
+
+  <script src="{{url_for('static',filename='js/index.js')}}"></script>
+</body>
+</html>

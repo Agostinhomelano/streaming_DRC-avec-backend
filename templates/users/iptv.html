@@ -24,6 +24,7 @@
         <li><a class="d" href="{{url_for('accueil')}}">Acceuil</a></li>
         <li><a class="a" href="{{url_for('netflix')}}">Netflix</a></li>
         <li><a class="b" href="{{url_for('prime_video')}}">Prime video</a></li>
+        <li><a class="e" href="{{url_for('crunchyroll')}}">Crunchyroll</a></li>
         <li><a class="d" href="{{url_for('mon_abonnement')}}">Mon abonnements</a></li>
         <li><a class="d" href="{{url_for('contacts')}}">Contact</a></li>
         </ul>
@@ -72,19 +73,19 @@
       <img src="{{url_for('static',filename='image/logo_iptv.png')}}" alt="">
       <p>3 mois</p>
       <p>prix:20$</p>
-      <a class="btn_2" href="#">Acheter</a>
+      <a class="btn_2" href="{{url_for('formulaire_de_paiement_iptv')}}">Acheter</a>
     </div>
     <div class="offre">
       <img src="{{url_for('static',filename='image/logo_iptv.png')}}" alt="">
       <p>6 mois</p>
       <p>prix:35$</p>
-      <a class="btn_2" href="#">Acheter</a>
+      <a class="btn_2" href="{{url_for('formulaire_de_paiement_iptv')}}">Acheter</a>
     </div>
     <div class="offre">
       <img src="{{url_for('static',filename='image/logo_iptv.png')}}" alt="">
       <p>12 mois</p>
       <p>prix:50$</p>
-      <a class="btn_2" href="#">Acheter</a>
+      <a class="btn_2" href="{{url_for('formulaire_de_paiement_iptv')}}">Acheter</a>
     </div>
   </div>
   <!-- FOOTER -->

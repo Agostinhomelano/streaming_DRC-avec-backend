@@ -16,7 +16,7 @@ body{
 .abonnement-container h1 {
   text-align: center;
   margin-bottom: 2rem;
-  color: #e50914;
+  color:  white;
 }
 
 .abonnement-list {
@@ -49,7 +49,7 @@ body{
   font-size:20px;
 }
 .abonnement-card.netflix {
-  border-top: 4px solid #e50914;
+  border-top: 4px solid  rgb(36, 164, 75);
 }
 .abonnement-card.prime {
   border-top: 4px solid #00A8E1;
@@ -65,7 +65,7 @@ body{
 
 .statut {
   font-weight: bold;
-  color: #e50914;
+  color:  rgb(36, 164, 75);
 }
 .abonnement-card.prime .statut {
   color:#00A8E1 ;

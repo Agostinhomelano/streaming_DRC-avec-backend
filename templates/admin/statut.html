@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>Poster un statut</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <style>
+        body{
+            background: url(/static/image/backgroud.jpg) no-repeat center center/cover;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        h1{
+            text-align: center;
+        }
+        .statut-form-container {
+            max-width: 420px;
+            margin: 40px auto 20px auto;
+            background: rgba(255,255,255,0.10);            
+            border-radius: 15px;
+            box-shadow: 0 4px 16px rgba(0,0,0,0.15);
+            padding: 30px 25px 20px 25px;
+            color: #fff;
+        }
+        .statut-form-container h2 {
+            text-align: center;
+            color:red;
+            margin-bottom: 18px;
+        }
+        .statut-form input[type="text"],
+        .statut-form textarea {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 14px;
+            border-radius: 7px;
+            border: 1px solid #444;
+            background: #181a20;
+            color: #fff;
+            font-size: 1rem;
+        }
+        .statut-form textarea {
+            min-height: 70px;
+            resize: vertical;
+        }
+        .statut-form input[type="file"] {
+            margin-bottom: 18px;
+            color: #fff;
+        }
+        .statut-form button {
+            width: 100%;
+            padding: 10px;
+            background: red;
+            color: #23272f;
+            border: none;
+            border-radius: 7px;
+            font-size: 1.1rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+        .statut-form button:hover {
+            background: #ff9800;
+        }
+        .statut-message {
+            text-align: center;
+            color: #af4c4c;
+            margin-bottom: 10px;
+        }
+        .statut-preview {
+            text-align: center;
+            margin-bottom: 15px;
+        }
+        .statut-preview img {
+            max-width: 90%;
+            max-height: 180px;
+            border-radius: 10px;
+            margin-top: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.18);
+        }
+  .admin-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 2rem 0;
+  background: rgba(0, 0, 0, 0.15);
+  color: white;
+  border-radius: 12px;
+  overflow: scroll;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+}
+
+.admin-table th, .admin-table td {
+  padding: 0.9rem 1rem;
+  text-align: left;
+  color: white;
+}
+.img{
+  width: 100px;
+  height: 100px;
+  /* object-fit: cover; */
+  border-radius: 50%;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.08);
+}
+.admin-table th {
+  /* background: #00A8E1; */
+  color: #fff;
+  font-weight: bold;
+  font-size: 1rem;
+}
+
+.admin-table tr {
+  border-bottom: 1px solid #ffffff;
+}
+
+/* .admin-table tr:last-child {
+  border-bottom: none;
+} */
+
+.admin-table td {
+  /* background: rgba(255,255,255,0.10); */
+  /* color: #222; */
+}
+
+/* .admin-table tr:hover td {
+  background: rgba(224, 9, 20, 0.21);
+} */
+.btn-retour {
+  display: inline-block;
+  margin-top: 2rem;
+  padding: 10px 24px;
+  background: #00A8E1;
+  color: #fff;
+  border-radius: 6px;
+  text-decoration: none;
+  text-align: center;
+  font-weight: bold;
+  transition: background 0.3s;
+}
+.btn-retour:hover {
+  background: #0077b6;
+}
+.btn-admin {
+  display: inline-block;
+  padding: 6px 16px;
+  background: #e50914;
+  color: #fff;
+  border-radius: 6px;
+  text-decoration: none;
+  font-weight: bold;
+  transition: background 0.3s;
+  font-size: 0.95rem;
+}
+
+.btn-admin:hover {
+  background: #b20710;
+}
+/* --- MODALE (overlay) --- */
+    .modal {
+      display: none;
+      position: fixed;
+      z-index: 9999;
+      left: 0; top: 0;
+      width: 100%; height: 100%;
+      background: rgba(0,0,0,0.6);
+      justify-content: center;
+      align-items: center;
+    }
+
+    .modal-content {
+      background: #fff;
+      padding: 20px;
+      border-radius: 10px;
+      width: 90%;
+      max-width: 400px;
+      text-align: center;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+      animation: fadeIn 0.3s ease-in-out;
+    }
+
+    .modal h2 {
+      margin-bottom: 15px;
+      color: #e50914;
+    }
+
+    .modal button {
+      padding: 10px 20px;
+      border: none;
+      border-radius: 6px;
+      margin: 10px;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: 0.3s;
+    }
+
+    .btn-cancel {
+      background: #ccc;
+    }
+    .btn-cancel:hover {
+      background: #aaa;
+    }
+
+    .btn-confirm {
+      background: #e50914;
+      color: #fff;
+    }
+    .btn-confirm:hover {
+      background: #b20710;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: scale(0.8); }
+      to { opacity: 1; transform: scale(1); }
+    }
+
+@media (max-width:992px) {
+  body{
+    min-height: 120vh;
+  }
+  .admin-container{
+    padding: 10px 8px 20px 5px ;
+  }
+}
+    </style>
+</head>
+<body>
+    <div class="statut-form-container">
+        <h2>Poster un nouveau statut</h2>
+        {% if message %}
+            <div class="statut-message">{{ message }}</div>
+        {% endif %}
+        <form class="statut-form" method="POST" enctype="multipart/form-data">
+            <input type="file" name="image" accept="image/*" id="imageInput" required>
+            <input type="text" name="titre" placeholder="Titre du statut" required>
+            <textarea name="description" placeholder="Description" required></textarea>
+            <div class="statut-preview" id="preview"></div>
+            <button type="submit">Publier</button>
+        </form>
+    </div>
+    <div class="admin-container">
+        <h1>Liste des statut</h1>
+        <table class="admin-table">
+        <thead>
+            <tr>
+            <th>Photo</th>
+            <th>Titre</th>
+            <th>Description</th>
+            <th>Date</th>
+            <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for statut in statut_aff %}
+            <tr>
+            <td data-label="Utilisateur"><img class="img" src="{{url_for('static',filename='img/'+statut.image)}}" alt="{{ statut.titre }}"</td>         
+            <td data-label="Mot de passe">{{ statut.titre }}</td>
+            <td data-label="activités">{{ statut.description }}</td>
+            <td data-label="activités">{{ statut.date_post }}</td>
+
+            <td>
+                <form action="{{url_for('supprimer_statut',id= statut.id)}}" method="post" class="delete-form">
+                    <button type="submit" class="btn-admin">Suprimer</button>
+                </form>
+            </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+        </table>
+        <a href="{{ url_for('accueil_admin') }}" class="btn-retour">Retour au tableau de bord</a>
+        <a href="{{url_for('deconnexion_admin')}}" class="btn-retour">Deconnexion</a>
+      </div>
+  <!-- MODALE -->
+    <div class="modal" id="confirmModal">
+      <div class="modal-content">
+        <h2>⚠ Confirmation</h2>
+        <p>Voulez-vous vraiment supprimer ce statut ?</p>
+        <button class="btn-cancel">Annuler</button>
+        <button class="btn-confirm">Supprimer</button>
+      </div>
+    </div>
+    <script>
+    // Aperçu de l'image uploadée
+    document.getElementById('imageInput').addEventListener('change', function(e) {
+        const preview = document.getElementById('preview');
+        preview.innerHTML = '';
+        if (this.files && this.files[0]) {
+            const img = document.createElement('img');
+            img.src = URL.createObjectURL(this.files[0]);
+            preview.appendChild(img);
+        }
+    });
+    const modal = document.getElementById("confirmModal");
+    const btnCancel = document.querySelector(".btn-cancel");
+    const btnConfirm = document.querySelector(".btn-confirm");
+    let formToSubmit = null;
+
+    // Pour chaque bouton supprimer
+    document.querySelectorAll(".delete-form").forEach(form => {
+      const btnDelete = form.querySelector(".btn-admin");
+
+      btnDelete.addEventListener("click", (e) => {
+        e.preventDefault();
+        formToSubmit = form;
+        modal.style.display = "flex";
+      });
+    });
+
+    // Fermer si on clique sur Annuler
+    btnCancel.addEventListener("click", () => {
+      modal.style.display = "none";
+      formToSubmit = null;
+    });
+
+    // Valider et envoyer le formulaire si on clique sur Confirmer
+    btnConfirm.addEventListener("click", () => {
+      if (formToSubmit) {
+        formToSubmit.submit();
+      }
+    });
+  
+    </script>
+</body>
+</html>

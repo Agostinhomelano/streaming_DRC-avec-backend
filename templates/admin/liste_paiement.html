@@ -250,9 +250,11 @@
           <th></th>
         </tr>
       </thead>
+      {%if paiements %}
       <tbody>
         {% for paiement in paiements %}
         <tr>
+          
           <td>{{ paiement.utilisateur_id }}</td>
           <td>{{ paiement.utilisateur.nom }}</td>
           <td>{{ paiement.service}}</td>
@@ -266,8 +268,11 @@
             <button class="btn-admin btn-gerer btn-primary" data-bs-toggel="modal" data-bs-target="#modalPaiement" data-id="{{paiement.id}}" data-nom="{{ paiement.nom }}">Gérer</button>
           </td>
         </tr>
+        {% else %}
+          <p style="color: white;">aucun paiement</p>
         {% endfor %}
       </tbody>
+      {% endif %}
     </table>
     <a href="{{ url_for('accueil_admin') }}" class="btn-retour">Retour au tableau de bord</a>
     <div class="modal" id="confirmModal">

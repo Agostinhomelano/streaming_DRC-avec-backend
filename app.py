@@ -3,12 +3,27 @@ from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import func
 from datetime import datetime, timedelta
 import os
+from werkzeug.utils import secure_filename
 
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///base.db'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.secret_key = "1a6676b463603eaa5118f0a289721f25d52b7fb7be2afebccfadaa455b618b7f"
 db = SQLAlchemy(app)
+
+BASE_DIR=os.path.dirname(os.path.abspath(__file__))
+DOSSIER_IMAGE='static/img'
+app.config['DOSSIER_IMAGE']=DOSSIER_IMAGE
+
+IMAGE_EXTENSIONS_VALIDES = {"png", "jpg", "jpeg", "gif"}
+def image_valide(nom_fichier):
+    return (
+        '.' in nom_fichier and nom_fichier.rsplit('.', 1)[1].lower() in IMAGE_EXTENSIONS_VALIDES
+    )
+
+def extension_valide(nom_fichier):
+    return '.' in nom_fichier and nom_fichier.rsplit('.',1) [1].lower() in EXTENSION_VALIDES
+EXTENSION_VALIDES={'txt','pdf','png','jpg','jpeg','gif'}
 
 # -------------------- MODELES --------------------
 
@@ -65,6 +80,13 @@ class Paiement(db.Model):
     date_paiement = db.Column(db.DateTime, default=datetime.utcnow)
     utilisateur=db.relationship("Utilisateurs", backref="paiememts",lazy=True)
 
+class Statut(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    titre = db.Column(db.String(100))
+    description = db.Column(db.Text)
+    image = db.Column(db.String(200))  # chemin du fichier image
+    date_post = db.Column(db.DateTime, default=datetime.utcnow)
+
 # -------------------- INIT DB --------------------
 
 def init_base():
@@ -86,7 +108,8 @@ def introduction():
 
 @app.route("/accueil")
 def accueil():
-    return render_template("users/index.html", session=session)
+    statut_aff = Statut.query.order_by(Statut.date_post.desc()).all()
+    return render_template("users/index.html", session=session, statut_aff=statut_aff)
 
 @app.route("/iptv")
 def iptv():
@@ -95,6 +118,11 @@ def iptv():
 @app.route("/netflix")
 def netflix():
     return render_template("users/netflix.html", session=session)
+
+@app.route("/crunchyroll")
+def crunchyroll():
+    return render_template("users/crunchyroll.html", session=session)
+
 
 @app.route("/Prime video")
 def prime_video():
@@ -203,14 +231,14 @@ def deconnexion_admin():
 
 # -------------------- ABONNEMENTS (USER) --------------------
 
-@app.route("/Formulaire_de_paiement", methods=['POST','GET'])
-def formulaire_paiement():
+@app.route("/Formulaire_de_paiement_netflix", methods=['POST','GET'])
+def formulaire_paiement_netflix():
     h1="Merci pour votre confiance !"
     p1="Votre paiement a bien été envoyé."
     p2="Nous vous répondrons dans les plus brefs délais."
     m="Retour"
     if 'user_id' not in session:
-        return redirect(url_for('connexion',next=url_for('formulaire_paiement')))
+        return redirect(url_for('connexion',next=url_for('formulaire_paiement_netflix')))
     service={
         "netflix":["Netflix classique","Netflix fidélité","Netflix economie","Netflix VIP"],
         "prime_video":["prime_video classique","prime_video fidélité","prime_video economie","prime_video VIP"],
@@ -232,7 +260,7 @@ def formulaire_paiement():
         ).first()
         if abonnement_existe:
             erreur = "Vous avez déjà souscrit à ce service. Paiement refusé."
-            return render_template("users/paiement.html", session=session, service=service, erreur=erreur, retour=page_precedentes())
+            return render_template("users/formulaire_paiement_netflix.html", session=session, service=service, erreur=erreur, retour=page_precedentes())
         new_paiement = Paiement(
             utilisateur_id=session["user_id"],
             service=service_choisi,
@@ -246,7 +274,142 @@ def formulaire_paiement():
         db.session.add(new_paiement)
         db.session.commit()
         return render_template("users/confirmation.html", h1=h1, p1=p1, p2=p2, retour=page_precedentes(), m=m)
-    return render_template("users/paiement.html", session=session, service=service, retour=page_precedentes())
+    return render_template("users/formulaire_paiement_netflix.html", session=session, service=service, retour=page_precedentes())
+
+@app.route("/formulaire_de_paiement_prime", methods=['POST','GET'])
+def formulaire_de_paiement_prime():
+    h1="Merci pour votre confiance !"
+    p1="Votre paiement a bien été envoyé."
+    p2="Nous vous répondrons dans les plus brefs délais."
+    m="Retour"
+    if 'user_id' not in session:
+        return redirect(url_for('connexion',next=url_for('formulaire_de_paiement_prime')))
+    service={
+        "netflix":["Netflix classique","Netflix fidélité","Netflix economie","Netflix VIP"],
+        "prime_video":["prime_video classique","prime_video fidélité","prime_video economie","prime_video VIP"],
+        "iptv":["iptv pour 3 mois","iptv pour 6 mois","iptv pour 12 mois"],
+    }
+    # ...existing code...
+    if request.method == "POST":
+        service_choisi = request.form['service']
+        moyen = request.form['moyen']
+        nom_compte = request.form['nom_compte']
+        numero = request.form['numero']
+        montant = request.form['montant']
+
+        # Vérification : abonnement actif pour ce service ?
+        # Vérification : abonnement déjà existant pour ce nom et ce service ?
+        abonnement_existe = Abonnements.query.join(Utilisateurs).filter(
+            Utilisateurs.nom == session["nom"],
+            Abonnements.service == service_choisi
+        ).first()
+        if abonnement_existe:
+            erreur = "Vous avez déjà souscrit à ce service. Paiement refusé."
+            return render_template("users/formulaire_de_paiement_prime.html", session=session, service=service, erreur=erreur, retour=page_precedentes())
+        new_paiement = Paiement(
+            utilisateur_id=session["user_id"],
+            service=service_choisi,
+            moyen=moyen,
+            nom_compte=nom_compte,
+            numero=numero,
+            montant=montant,
+            statut=True,
+            date_paiement=datetime.now()
+        )
+        db.session.add(new_paiement)
+        db.session.commit()
+        return render_template("users/confirmation.html", h1=h1, p1=p1, p2=p2, retour=page_precedentes(), m=m)
+    return render_template("users/formulaire_de_paiement_prime.html", session=session, service=service, retour=page_precedentes())
+
+@app.route("/Formulaire_de_paiement_iptv", methods=['POST','GET'])
+def formulaire_de_paiement_iptv():
+    h1="Merci pour votre confiance !"
+    p1="Votre paiement a bien été envoyé."
+    p2="Nous vous répondrons dans les plus brefs délais."
+    m="Retour"
+    if 'user_id' not in session:
+        return redirect(url_for('connexion',next=url_for('formulaire_de_paiement_iptv')))
+    service={
+        "netflix":["Netflix classique","Netflix fidélité","Netflix economie","Netflix VIP"],
+        "prime_video":["prime_video classique","prime_video fidélité","prime_video economie","prime_video VIP"],
+        "iptv":["abonnement iptv pour 3 mois","abonnement iptv pour 6 mois","abonnement iptv pour 12 mois"],
+    }
+    # ...existing code...
+    if request.method == "POST":
+        service_choisi = request.form['service']
+        moyen = request.form['moyen']
+        nom_compte = request.form['nom_compte']
+        numero = request.form['numero']
+        montant = request.form['montant']
+
+        # Vérification : abonnement actif pour ce service ?
+        # Vérification : abonnement déjà existant pour ce nom et ce service ?
+        abonnement_existe = Abonnements.query.join(Utilisateurs).filter(
+            Utilisateurs.nom == session["nom"],
+            Abonnements.service == service_choisi
+        ).first()
+        if abonnement_existe:
+            erreur = "Vous avez déjà souscrit à ce service. Paiement refusé."
+
+            return render_template("users/confirmation.html", session=session, erreur=erreur, retour=page_precedentes())
+        new_paiement = Paiement(
+            utilisateur_id=session["user_id"],
+            service=service_choisi,
+            moyen=moyen,
+            nom_compte=nom_compte,
+            numero=numero,
+            montant=montant,
+            statut=True,
+            date_paiement=datetime.now()
+        )
+        db.session.add(new_paiement)
+        db.session.commit()
+        return render_template("users/confirmation.html", h1=h1, p1=p1, p2=p2, retour=page_precedentes(), m=m)
+    return render_template("users/formulaire_de_paiement_iptv.html", session=session, service=service, retour=page_precedentes())
+
+@app.route("/formulaire_de_paiement_crun", methods=['POST','GET'])
+def formulaire_de_paiement_crun():
+    h1="Merci pour votre confiance !"
+    p1="Votre paiement a bien été envoyé."
+    p2="Nous vous répondrons dans les plus brefs délais."
+    m="Retour"
+    if 'user_id' not in session:
+        return redirect(url_for('connexion',next=url_for('formulaire_de_paiement_crun')))
+    service={
+        "crunchyroll":["crunchyroll pour 3 mois","crunchyroll pour 6 mois","crunchyroll pour 12 mois"]
+    }
+    # ...existing code...
+    if request.method == "POST":
+        service_choisi = request.form['service']
+        moyen = request.form['moyen']
+        nom_compte = request.form['nom_compte']
+        numero = request.form['numero']
+        montant = request.form['montant']
+
+        # Vérification : abonnement actif pour ce service ?
+        # Vérification : abonnement déjà existant pour ce nom et ce service ?
+        abonnement_existe = Abonnements.query.join(Utilisateurs).filter(
+            Utilisateurs.nom == session["nom"],
+            Abonnements.service == service_choisi
+        ).first()
+        if abonnement_existe:
+            erreur = "Vous avez déjà souscrit à ce service. Paiement refusé."
+            return render_template("users/formulaire_de_paiement_crunch.html", session=session, service=service, erreur=erreur, retour=page_precedentes())
+        new_paiement = Paiement(
+            utilisateur_id=session["user_id"],
+            service=service_choisi,
+            moyen=moyen,
+            nom_compte=nom_compte,
+            numero=numero,
+            montant=montant,
+            statut=True,
+            date_paiement=datetime.now()
+        )
+        db.session.add(new_paiement)
+        db.session.commit()
+        return render_template("users/confirmation.html", h1=h1, p1=p1, p2=p2, retour=page_precedentes(), m=m)
+    return render_template("users/formulaire_de_paiement_crunch.html", session=session, service=service, retour=page_precedentes())
+
 # ...existing code...
 @app.route("/admin/valider_paiement/<int:id>", methods=["POST","GET"])
 def valider_paiement(id):
@@ -280,7 +443,8 @@ def mon_abonnement():
     if 'user_id' not in session:
         return redirect(url_for('connexion', next=url_for('mon_abonnement')))
     abonnements = Abonnements.query.filter_by(utilisateur_id=session["user_id"]).order_by(Abonnements.date_fin.desc()).all()
-    return render_template("users/mon_abonnement.html", abonnements=abonnements, session=session)
+    now=datetime.now()
+    return render_template("users/mon_abonnement.html", abonnements=abonnements, session=session, now=now)
 
 # -------------------- CONTACT --------------------
 
@@ -361,6 +525,42 @@ def liste_paiement():
 @app.route("/admin/list_activite")
 def list_activite():
     return render_template("admin/list_activite.html")
+
+@app.route('/admin/statut', methods=['GET', 'POST'])
+def admin_statut():
+    message = None
+    statut_aff = Statut.query.all()
+    if request.method == 'POST':
+        titre = request.form['titre']
+        description = request.form['description']
+        image = request.files['image']
+        date_post=datetime.now()
+        if image and image.filename != '' and image_valide(image.filename):
+            nom_fichier = secure_filename(image.filename)
+            chemin_complet = os.path.join(app.config['DOSSIER_IMAGE'], nom_fichier)
+            os.makedirs(app.config['DOSSIER_IMAGE'], exist_ok=True)
+            image.save(chemin_complet)
+            image_path = nom_fichier
+        else:
+            return "Fichier image non valide."
+        statut = Statut(titre=titre, description=description, image=image_path,date_post=date_post)
+        db.session.add(statut)
+        db.session.commit()
+        message = "Statut publié avec succès !"
+    return render_template('admin/statut.html', message=message, statut_aff=statut_aff)
+
+@app.route("/admin/liste_statut")
+def liste_statut():
+    statut = Statut.query.all()
+    return render_template("admin/liste_statut.html", statut=statut)
+
+@app.route("/admin/statut/Supprimer/<int:id>", methods=["POST"])
+def supprimer_statut(id):
+    statut = Statut.query.get(id)
+    if statut:
+        db.session.delete(statut)
+        db.session.commit()
+    return redirect(url_for("admin_statut"))
 
 # -------------------- RUN --------------------
 

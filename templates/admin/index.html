@@ -35,6 +35,11 @@
         <p>Visualiser l'activité du site</p>
         <a href="{{ url_for('list_activite') }}" class="btn-admin">Voir les activité</a>
       </div>
+      <div class="admin-card">
+        <h2>statut</h2>
+        <p>Poster un nouveau film</p>
+        <a href="{{ url_for('admin_statut') }}" class="btn-admin">Poster un statut</a>
+      </div>
     </div>
     <a href="{{ url_for('accueil') }}" class="btn-retour">Retour au site</a>
     <a href="{{url_for('deconnexion_admin')}}" class="btn-retour">Deconnexion</a>
