@@ -17,7 +17,7 @@ document.addEventListener('DOMContentLoaded', function() {
     function getVisibleCount() {
         if(window.innerWidth <= 768) return 1; // mobile
         if(window.innerWidth <= 1024) return 2; // tablette
-        return 4; // pc
+        return 5; // pc
     }
 
     function updateCarousel() {

@@ -231,24 +231,22 @@
       <thead>
         <tr>
           <th>ID</th>
-          <th>Utilisateur</th>
-          <th>Mot de passe</th>
-          <th>activités</th>
-          <th></th>
+          <th>Nom</th>
+          <th>statut</th>
+          <th>operation</th>
+          <th>date</th>
         </tr>
       </thead>
       <tbody>
-        {% for user in users %}
+        {% for activite in activites %}
         <tr>
-          <td data-label="ID">{{ user.id }}</td>
-          <td data-label="Utilisateur">{{ user.nom }}</td>
-          <td data-label="Mot de passe">{{ user.mdp }}</td>
-          <td data-label="activités">Actif</td>
-          <td>
-            <form action="{{url_for('supprimer_utilisateur',id=user.id)}}" method="post" class="delete-form">
-                <button type="submit" class="btn-admin">Suprimer</button>
-            </form>
+          <td data-label="ID">{{ activite.id }}</td>
+          <td data-label="Utilisateur">{{ activite.utilisateur_id }}</td>
+          <td data-label="Mot de passe">
+            {{ activite.is_admin }}
           </td>
+          <td>{{activite.operation}}</td>
+          <td>{{ activite.date_heure }}</td>
         </tr>
         {% endfor %}
       </tbody>
