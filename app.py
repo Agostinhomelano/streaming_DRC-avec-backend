@@ -89,7 +89,7 @@ class Statut(db.Model):
 
 class Activites(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    utilisateur_id = db.Column(db.Integer, db.ForeignKey('utilisateurs.id'), nullable=False)
+    utilisateur_id = db.Column(db.Integer)
     is_admin = db.Column(db.Boolean, default=False)
     nom = db.Column(db.String(100))
     operation = db.Column(db.String(200))
@@ -157,6 +157,7 @@ def inscription():
 
         nouvel_utilisateur = Utilisateurs(nom=nom, mdp=mdp)
         db.session.add(nouvel_utilisateur)
+        db.session.commit()
         activite = Activites(
                                 utilisateur_id=nouvel_utilisateur.id,
                                 is_admin=False,
@@ -232,6 +233,7 @@ def inscription_admin():
 
         nouvel_admin = Administracteurs(nom=nom, mdp=mdp)
         db.session.add(nouvel_admin)
+        db.session.commit()
         activite = Activites(
                                 utilisateur_id=nouvel_admin.id,
                                 is_admin=True,
@@ -282,8 +284,7 @@ def formulaire_paiement_netflix():
             Abonnements.service == service_choisi
         ).first()
         if abonnement_existe:
-            erreur = "Vous avez déjà souscrit à ce service. Paiement refusé."
-            return render_template("users/formulaire_paiement_netflix.html", session=session, service=service, erreur=erreur, retour=page_precedentes())
+            return render_template("users/confirmation.html", session=session, service=service, erreur="Vous avez déjà souscrit à ce service. Paiement refusé.", retour=page_precedentes())
         new_paiement = Paiement(
             utilisateur_id=session["user_id"],
             service=service_choisi,
@@ -295,8 +296,9 @@ def formulaire_paiement_netflix():
             date_paiement=datetime.now()
         )
         db.session.add(new_paiement)
+        db.session.commit()
         activite = Activites(
-                                utilisateur_id=new_paiement.id,
+                                utilisateur_id=session.get("user_id"),
                                 is_admin=False,
                                 nom=session["nom"],
                                 operation="A payer un abonnement netflix"
@@ -316,6 +318,58 @@ def formulaire_de_paiement_prime():
         return redirect(url_for('connexion',next=url_for('formulaire_de_paiement_prime')))
     service={
         "netflix":["Netflix classique","Netflix fidélité","Netflix economie","Netflix VIP"],
+        "prime_video":["prime video classique","prime video fidélité","prime video economie","prime video VIP"],
+        "iptv":["iptv pour 3 mois","iptv pour 6 mois","iptv pour 12 mois"],
+    }
+    # ...existing code...
+    if request.method == "POST":
+        service_choisi = request.form['service']
+        moyen = request.form['moyen']
+        nom_compte = request.form['nom_compte']
+        numero = request.form['numero']
+        montant = request.form['montant']
+
+        # Vérification : abonnement actif pour ce service ?
+        # Vérification : abonnement déjà existant pour ce nom et ce service ?
+        abonnement_existe = Abonnements.query.join(Utilisateurs).filter(
+            Utilisateurs.nom == session["nom"],
+            Abonnements.service == service_choisi
+        ).first()
+        if abonnement_existe:
+            return render_template("users/confirmation.html", session=session, service=service, erreur="Vous avez déjà souscrit à ce service. Paiement refusé.", retour=page_precedentes())
+        new_paiement = Paiement(
+            utilisateur_id=session["user_id"],
+            service=service_choisi,
+            moyen=moyen,
+            nom_compte=nom_compte,
+            numero=numero,
+            montant=montant,
+            statut=True,
+            date_paiement=datetime.now()
+        )
+        db.session.add(new_paiement)
+        db.session.commit()
+        activite = Activites(
+                                utilisateur_id=session.get("user_id"),
+                                is_admin=False,
+                                nom=session["nom"],
+                                operation="A payer un abonnement prime_video"
+                                        )
+        db.session.add(activite)
+        db.session.commit()
+        return render_template("users/confirmation.html", h1=h1, p1=p1, p2=p2, retour=page_precedentes(), m=m)
+    return render_template("users/formulaire_de_paiement_prime.html", session=session, service=service, retour=page_precedentes())
+
+@app.route("/formulaire_de_paiement_net_prime", methods=['POST','GET'])
+def formulaire_de_paiement_net_prime():
+    h1="Merci pour votre confiance !"
+    p1="Votre paiement a bien été envoyé."
+    p2="Nous vous répondrons dans les plus brefs délais."
+    m="Retour"
+    if 'user_id' not in session:
+        return redirect(url_for('connexion',next=url_for('formulaire_de_paiement_net_prime')))
+    service={
+        "netflix et prime video":["Netflix et prime video classique","Netflix et prime video fidélité","Netflix et prime video economie","Netflix et prime video VIP"],
         "prime_video":["prime_video classique","prime_video fidélité","prime_video economie","prime_video VIP"],
         "iptv":["iptv pour 3 mois","iptv pour 6 mois","iptv pour 12 mois"],
     }
@@ -334,8 +388,7 @@ def formulaire_de_paiement_prime():
             Abonnements.service == service_choisi
         ).first()
         if abonnement_existe:
-            erreur = "Vous avez déjà souscrit à ce service. Paiement refusé."
-            return render_template("users/formulaire_de_paiement_prime.html", session=session, service=service, erreur=erreur, retour=page_precedentes())
+            return render_template("users/confirmation.html", session=session, service=service, erreur="Vous avez déjà souscrit à ce service. Paiement refusé.", retour=page_precedentes())
         new_paiement = Paiement(
             utilisateur_id=session["user_id"],
             service=service_choisi,
@@ -347,16 +400,17 @@ def formulaire_de_paiement_prime():
             date_paiement=datetime.now()
         )
         db.session.add(new_paiement)
+        db.session.commit()
         activite = Activites(
-                                utilisateur_id=new_paiement.id,
+                                utilisateur_id=session.get("user_id"),
                                 is_admin=False,
                                 nom=session["nom"],
-                                operation="A payer un abonnement prime_video"
+                                operation="A payer un abonnement Netflix_prime"
                                         )
         db.session.add(activite)
         db.session.commit()
         return render_template("users/confirmation.html", h1=h1, p1=p1, p2=p2, retour=page_precedentes(), m=m)
-    return render_template("users/formulaire_de_paiement_prime.html", session=session, service=service, retour=page_precedentes())
+    return render_template("users/formulaire_de_paiement_net_prime.html", session=session, service=service, retour=page_precedentes())
 
 @app.route("/Formulaire_de_paiement_iptv", methods=['POST','GET'])
 def formulaire_de_paiement_iptv():
@@ -386,9 +440,7 @@ def formulaire_de_paiement_iptv():
             Abonnements.service == service_choisi
         ).first()
         if abonnement_existe:
-            erreur = "Vous avez déjà souscrit à ce service. Paiement refusé."
-
-            return render_template("users/confirmation.html", session=session, erreur=erreur, retour=page_precedentes())
+            return render_template("users/confirmation.html", session=session, erreur="Vous avez déjà souscrit à ce service. Paiement refusé.", retour=page_precedentes())
         new_paiement = Paiement(
             utilisateur_id=session["user_id"],
             service=service_choisi,
@@ -400,8 +452,9 @@ def formulaire_de_paiement_iptv():
             date_paiement=datetime.now()
         )
         db.session.add(new_paiement)
+        db.session.commit()
         activite = Activites(
-                                utilisateur_id=new_paiement.id,
+                                utilisateur_id=session.get("user_id"),
                                 is_admin=False,
                                 nom=session["nom"],
                                 operation="A payer un abonnement iptv"
@@ -437,8 +490,7 @@ def formulaire_de_paiement_crun():
             Abonnements.service == service_choisi
         ).first()
         if abonnement_existe:
-            erreur = "Vous avez déjà souscrit à ce service. Paiement refusé."
-            return render_template("users/formulaire_de_paiement_crunch.html", session=session, service=service, erreur=erreur, retour=page_precedentes())
+            return render_template("users/confirmation.html", session=session, service=service, erreur="Vous avez déjà souscrit à ce service. Paiement refusé.", retour=page_precedentes())
         new_paiement = Paiement(
             utilisateur_id=session["user_id"],
             service=service_choisi,
@@ -450,6 +502,7 @@ def formulaire_de_paiement_crun():
             date_paiement=datetime.now()
         )
         db.session.add(new_paiement)
+        db.session.commit()
         activite = Activites(
                                 utilisateur_id=new_paiement.id,
                                 is_admin=False,
@@ -474,11 +527,12 @@ def valider_paiement(id):
         )
     db.session.add(nouvel_abonnement)
     db.session.delete(paiement)
+    db.session.commit()
     activite = Activites(
-                            utilisateur_id=nouvel_abonnement.id,
+                            utilisateur_id=session.get("admin_id"),
                             is_admin=True,
-                            nom=session["nom"],
-                            operation="A valider un paiement valider un paiement"
+                            nom=session.get("admin_nom"),
+                            operation="A valider un paiement"
                                     )
     db.session.add(activite)
     db.session.commit()
@@ -492,12 +546,13 @@ def supprimer_paiement(id):
       flash("Paiement introuvable","danger")
       return redirect(url_for("liste_paiement"))
     db.session.delete(paiement)
+    db.session.commit()
     activite = Activites(
-                            utilisateur_id=paiement.utilisateur_id,
-                            is_admin=True,
-                            nom=session["nom"],
-                            operation="A suprimer un paiement"
-                                    )
+                        utilisateur_id=session.get("admin_id"),
+                        is_admin=True,
+                        nom=session.get("admin_nom"),
+                        operation="A suprimer un paiement"
+                                )
     db.session.add(activite)
     db.session.commit()
     flash("paiement Suprimer")
@@ -525,6 +580,7 @@ def contacts():
         message = request.form['message']
         nouveau_commentaire = Commentaire(nom=nom, tel=tel, message=message)
         db.session.add(nouveau_commentaire)
+        db.session.commit()
         activite = Activites(
                             utilisateur_id=nouveau_commentaire.id,
                             is_admin=False,
@@ -550,6 +606,8 @@ def accueil_admin():
 
 @app.route("/admin/utilisateurs")
 def list_users():
+    if 'admin_id' not in session:
+        return redirect(url_for('connexion_admin', next=url_for('list_users')))
     users = Utilisateurs.query.all()
     return render_template("admin/list_users.html", users=users)
 
@@ -558,10 +616,11 @@ def supprimer_utilisateur(id):
     user = Utilisateurs.query.get(id)
     if user:
         db.session.delete(user)
+        db.session.commit()
         activite = Activites(
-                                utilisateur_id=user.id,
+                                utilisateur_id=session.get("admin_id"),
                                 is_admin=True,
-                                nom=session["nom"],
+                                nom=session.get("admin_nom"),
                                 operation="A suprimer un utilisateur"
                                         )
         db.session.add(activite)
@@ -571,18 +630,18 @@ def supprimer_utilisateur(id):
 @app.route("/liste_abonnements")
 def list_abonnements():
     # route conservée telle quelle (ta page admin)
-    num=1
     abonnements = Abonnements.query.order_by(Abonnements.date_fin.desc()).all()
-    return render_template("admin/list_abonnement.html", abonnements=abonnements,num=num)
+    return render_template("admin/list_abonnement.html", abonnements=abonnements)
 
 @app.route("/admin/liste_abonnements/supprimer_abonnement/<int:id>", methods=["POST", "GET"])
 def supprimer_abonnement(id):
     abonnement = Abonnements.query.get_or_404(id)
     db.session.delete(abonnement)
+    db.session.commit()
     activite = Activites(
                             utilisateur_id=abonnement.id,
                             is_admin=True,
-                            nom=session["nom"],
+                            nom=session.get("admin_nom"),
                             operation="A suprimer un abonnement"
                                     )
     db.session.add(activite)
@@ -592,6 +651,8 @@ def supprimer_abonnement(id):
 
 @app.route("/admin/liste_commentaires")
 def liste_commentaires():
+    if 'admin_id' not in session:
+        return redirect(url_for('connexion_admin', next=url_for('liste_commentaires')))
     commentaires = Commentaire.query.all()
     return render_template("admin/commentaire.html", commentaires=commentaires)
 
@@ -600,10 +661,11 @@ def supprimer_commentaire(id):
     commentaire = Commentaire.query.get(id)
     if commentaire:
         db.session.delete(commentaire)
+        db.session.commit()
         activite = Activites(
                             utilisateur_id=commentaire.id,
                             is_admin=True,
-                            nom=session["nom"],
+                            nom=session.get("admin_nom"),
                             operation="A suprimer un commentaire"
                                     )
         db.session.add(activite)
@@ -612,11 +674,15 @@ def supprimer_commentaire(id):
 
 @app.route("/admin/liste_paiement")
 def liste_paiement():
+    if 'admin_id' not in session:
+        return redirect(url_for('connexion_admin', next=url_for('liste_paiement')))
     paiements = Paiement.query.order_by(Paiement.date_paiement.desc()).all()
     return render_template("admin/liste_paiement.html", paiements=paiements)
 
 @app.route('/admin/statut', methods=['GET', 'POST'])
 def admin_statut():
+    if 'admin_id' not in session:
+        return redirect(url_for('connexion_admin', next=url_for('admin_statut')))
     message = None
     statut_aff = Statut.query.all()
     if request.method == 'POST':
@@ -636,10 +702,20 @@ def admin_statut():
         db.session.add(statut)
         db.session.commit()
         message = "Statut publié avec succès !"
+        activite = Activites(
+                            utilisateur_id=statut.id,
+                            is_admin=True,
+                            nom=session.get("admin_nom"),
+                            operation="A ajouter un statut"
+                                    )
+        db.session.add(activite)
+        db.session.commit()
     return render_template('admin/statut.html', message=message, statut_aff=statut_aff)
 
 @app.route("/admin/liste_statut")
 def liste_statut():
+    if 'admin_id' not in session:
+        return redirect(url_for('connexion_admin', next=url_for('liste_statut')))
     statut = Statut.query.all()
     return render_template("admin/liste_statut.html", statut=statut)
 
@@ -648,12 +724,13 @@ def supprimer_statut(id):
     statut = Statut.query.get(id)
     if statut:
         db.session.delete(statut)
+        db.session.commit()
         activite = Activites(
-                                utilisateur_id=statut.id,
-                                is_admin=True,
-                                nom=session["nom"],
-                                operation="A suprimer un abonnement"
-                                        )
+                            utilisateur_id=statut.id,
+                            is_admin=True,
+                            nom=session.get("admin_nom"),
+                            operation="A suprimer un statut"
+                                    )
         db.session.add(activite)
         db.session.commit()
     return redirect(url_for("admin_statut"))
@@ -661,16 +738,20 @@ def supprimer_statut(id):
 @app.route("/admin/list_activite")
 def list_activite():
     if 'admin_id' not in session:
+        return redirect(url_for('connexion_admin', next=url_for('list_activite')))
+    if 'admin_id' not in session:
         return redirect(url_for('connexion_admin'))
 
     admin = Administracteurs.query.get(session['admin_id'])
-    # activites=Activites.query.all()
-    # if activites.is_admin == True:
-    #     statut="Administacteur"
-    # else:
-    #     statut="Utilisateur"
+    # Limite à 100 activités, supprime les plus anciennes si besoin
+    MAX_ACTIVITES = 100
+    total = Activites.query.count()
+    if total > MAX_ACTIVITES:
+        # Supprime les plus anciennes
+        ids_to_delete = [a.id for a in Activites.query.order_by(Activites.date_heure.asc()).limit(total - MAX_ACTIVITES).all()]
+        Activites.query.filter(Activites.id.in_(ids_to_delete)).delete(synchronize_session=False)
+        db.session.commit()
     activites = Activites.query.order_by(Activites.date_heure.desc()).all()
-
     return render_template("admin/list_activite.html", admin=admin, activites=activites,retour=page_precedentes())
 
 

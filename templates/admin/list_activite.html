@@ -240,10 +240,14 @@
       <tbody>
         {% for activite in activites %}
         <tr>
-          <td data-label="ID">{{ activite.id }}</td>
-          <td data-label="Utilisateur">{{ activite.utilisateur_id }}</td>
+          <td data-label="ID">{{ loop.index }}</td>
+          <td data-label="Utilisateur">{{ activite.nom }}</td>
           <td data-label="Mot de passe">
-            {{ activite.is_admin }}
+            {% if activite.is_admin == True %}
+            Administrateur
+            {% else%}
+            utilisateur
+            {%endif%}
           </td>
           <td>{{activite.operation}}</td>
           <td>{{ activite.date_heure }}</td>

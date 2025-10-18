@@ -24,8 +24,9 @@
         <li><a class="d" href="{{url_for('accueil')}}">Acceuil</a></li>
         <li><a class="a" href="{{url_for('netflix')}}">Netflix</a></li>
         <li><a class="b" href="{{url_for('prime_video')}}">Prime video</a></li>
+        <li><a class="e" href="{{url_for('crunchyroll')}}">Crunchyroll</a></li>
         <li><a class="d" href="{{url_for('mon_abonnement')}}">Mon abonnements</a></li>
-        <li><a class="d" href="{{url_for('contacts')}}">Contact</a></li>
+        <li><a class="d" href="{{url_for('contacts')}}">Besoin D'aide?</a></li>
         </ul>
         {% if session.nom %}
         <div class="menu-btns">
@@ -71,28 +72,28 @@
       <p>classique</p>
       <p>1 mois</p>
       <p>prix:6,05$</p>
-      <a class="btn_2" href="#">Acheter</a>
+      <a class="btn_2" href="{{url_for('formulaire_de_paiement_net_prime')}}">Acheter</a>
     </div>
     <div class="offre">
       <img src="{{url_for('static',filename='image/img27.jpg')}}" alt="">
       <p>fidelite</p>
       <p>2 mois</p>
       <p>prix:12$</p>
-      <a class="btn_2" href="#">Acheter</a>
+      <a class="btn_2" href="{{url_for('formulaire_de_paiement_net_prime')}}">Acheter</a>
     </div>
     <div class="offre">
       <img src="{{url_for('static',filename='image/img27.jpg')}}" alt="">
       <p>economie</p>
       <p>3 mois</p>
       <p>prix:17$</p>
-      <a class="btn_2" href="#">Acheter</a>
+      <a class="btn_2" href="{{url_for('formulaire_de_paiement_net_prime')}}">Acheter</a>
     </div>
     <div class="offre">
       <img src="{{url_for('static',filename='image/img27.jpg')}}" alt="">
       <p>VIP</p>
       <p>6 mois</p>
       <p>prix:32$</p>
-      <a class="btn_2" href="#">Acheter</a>
+      <a class="btn_2" href="{{url_for('formulaire_de_paiement_net_prime')}}">Acheter</a>
     </div>
   </div>
   <!-- FOOTER -->

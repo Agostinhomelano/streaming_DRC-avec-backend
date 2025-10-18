@@ -245,7 +245,7 @@
         <tbody>
           {% for c in commentaires %}
           <tr>
-            <td data-label="ID">{{ c.id }}</td>
+            <td data-label="ID">{{ loop.index }}</td>
             <td data-label="Nom">{{ c.nom }}</td>
             <td data-label="Téléphone"><a href="https://wa.me/{{ c.tel }}" target="_blank">{{ c.tel }}</a></td>
             <td data-label="Message">{{ c.message }}</td>

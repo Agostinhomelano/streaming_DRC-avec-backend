@@ -8,14 +8,18 @@
 </head>
 <body>
   <div class="confirmation-container">
-  {% if h1,p1,p2,m,erreur %}
+  {% if erreur %}
+  <h1>{{erreur}}</h1>
+  <a href="{{retour}}" class="btn-retour">retour</a>
+  <a href="{{ url_for('accueil') }}" class="btn-retour">Retour à l'accueil</a>
+  {% else %}
     <h1>{{h1}}</h1>
     <p>{{p1}}<br>
     {{p2}}<p>
     <a href="{{retour}}" class="btn-retour">{{m}}</a>
     <a href="{{ url_for('accueil') }}" class="btn-retour">Retour à l'accueil</a>
-  {% else %}
-  <h1>{{erreur}}</h1>
+  
+  
   {% endif%}
 </div>
 </body>

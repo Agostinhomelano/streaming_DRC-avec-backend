@@ -255,7 +255,7 @@
         {% for paiement in paiements %}
         <tr>
           
-          <td>{{ paiement.utilisateur_id }}</td>
+          <td>{{ loop.index }}</td>
           <td>{{ paiement.utilisateur.nom }}</td>
           <td>{{ paiement.service}}</td>
           <td>{{ paiement.moyen}}</td>

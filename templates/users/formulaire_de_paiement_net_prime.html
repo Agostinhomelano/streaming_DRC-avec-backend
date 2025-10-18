@@ -104,10 +104,7 @@
 </head>
 <body>
     <div class="bloc">
-        {% if erreur %}
-            <div class="alert alert-danger">{{ erreur }}</div>
-        {% endif %}
-        <h1>Bienvenue sur le formulaire de paiement NETFLIX</h1>
+        <h1>Bienvenue sur le formulaire de paiement du pack NETFLIX ET PRIME VIDEO</h1>
         <h3>Envoyer vos frais d'abonnements netflix en toutes securite et très facilement.</h3>
         <form method="post">
             <div class="service">
@@ -116,10 +113,10 @@
                     <select id="service" name="service" required>
                         <option value="" disabled selected> Sélectionnez un format </option>
                         {% if service %}
-                        <option value="{{service['netflix'][0]}}">{{service['netflix'][0]}}</option>
-                        <option value="{{service['netflix'][1]}}">{{service['netflix'][1]}}</option>
-                        <option value="{{service['netflix'][2]}}">{{service['netflix'][2]}}</option>
-                        <option value="{{service['netflix'][3]}}">{{service['netflix'][3]}}</option>            
+                        <option value="{{service['netflix et prime video'][0]}}">{{service['netflix et prime video'][0]}}</option>
+                        <option value="{{service['netflix et prime video'][1]}}">{{service['netflix et prime video'][1]}}</option>
+                        <option value="{{service['netflix et prime video'][2]}}">{{service['netflix et prime video'][2]}}</option>
+                        <option value="{{service['netflix et prime video'][3]}}">{{service['netflix et prime video'][3]}}</option>            
                         {%endif%}
                     </select>
                 </div>

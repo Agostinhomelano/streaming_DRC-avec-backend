@@ -421,11 +421,9 @@ footer {
     position: relative;
     display: flex;
     align-items: center;
-    /* overflow: hidden; */
     width: 100%;
     min-height: 260px;
     padding: 20px 0;
-    /* background-color: red; */
 }
 .carousel-netflix-item {
     flex: 0 0 200px;
@@ -433,10 +431,10 @@ footer {
     opacity: 0.6;
     transform: scale(0.9);
     transition: transform 0.4s, opacity 0.4s;
-    background: #23272f;
+    /* background: #23272f; */
     border-radius: 12px;
     text-align: center;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    /* box-shadow: 0 2px 8px rgba(0,0,0,0.08); */
     z-index: 1;
     display: none;
     width: 100%;
@@ -446,7 +444,7 @@ footer {
     opacity: 1;
     transform: scale(1.15);
     z-index: 2;
-    box-shadow: 0 4px 16px rgba(255,179,71,0.18);
+    /* box-shadow: 0 4px 16px rgba(255,179,71,0.18); */
     display: block;
 }
 .carousel-netflix-item.visible {
@@ -454,11 +452,13 @@ footer {
 }
 .carousel-netflix-item img {
     width: 100%;
-    max-width: 200px;
-    height: 200px;
-    object-fit: cover;
+    max-width: 220px;
+    height: auto;
+    max-height: 220px;
+    object-fit: contain; /* Affiche toute l'image sans rognage */
     border-radius: 10px;
     margin-bottom: 8px;
+    /* box-shadow: 0 2px 8px rgba(0,0,0,0.18); */
 }
 .carousel-netflix-btn {
     position: absolute;
@@ -487,7 +487,7 @@ footer {
     }
     .carousel-netflix-item img {
         max-width: 40vw;
-        height: 140px;
+        max-height: 180px;
     }
 }
 
@@ -511,7 +511,8 @@ footer {
     }
     .carousel-netflix-item img {
         max-width: 90vw;
-        height: 180px;
+        max-height: 220px;
+        height: auto;
     }
     .carousel-netflix-btn {
         font-size: 1.5rem;
@@ -533,20 +534,20 @@ footer {
     opacity: 0.6;
     transform: scale(0.9);
     transition: transform 0.4s, opacity 0.4s;
-    background: #23272f;
+    /* background: #23272f; */
     border-radius: 12px;
     text-align: center;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    /* box-shadow: 0 2px 8px rgba(0,0,0,0.08); */
     z-index: 1;
     display: none;
-    width: 100%;
+    width: 90%;
     /* background-color: blue; */
 }
 .carousel-netflix-item.active {
     opacity: 1;
     transform: scale(1.15);
     z-index: 2;
-    box-shadow: 0 4px 16px rgba(255,179,71,0.18);
+    /* box-shadow: 0 4px 16px rgba(255,179,71,0.18); */
     display: block;
 }
 .carousel-netflix-item.visible {
@@ -564,7 +565,7 @@ footer {
     position: absolute;
     top: 50%;
     transform: translateY(-50%);
-    background: rgba(0,0,0,0.5);
+    /* background: rgba(0,0,0,0.5); */
     color: #fff;
     border: none;
     font-size: 2rem;

@@ -110,19 +110,10 @@
 .admin-table tr {
   border-bottom: 1px solid #ffffff;
 }
-
-/* .admin-table tr:last-child {
-  border-bottom: none;
-} */
-
-.admin-table td {
-  /* background: rgba(255,255,255,0.10); */
-  /* color: #222; */
+.butn{
+  text-align: center;
+  gap: 20px;
 }
-
-/* .admin-table tr:hover td {
-  background: rgba(224, 9, 20, 0.21);
-} */
 .btn-retour {
   display: inline-block;
   margin-top: 2rem;
@@ -219,6 +210,11 @@
     padding: 10px 8px 20px 5px ;
   }
 }
+@media (max-width:500px) {
+  body{
+    min-height: 270vh;
+  }
+}
     </style>
 </head>
 <body>
@@ -264,8 +260,11 @@
             {% endfor %}
         </tbody>
         </table>
-        <a href="{{ url_for('accueil_admin') }}" class="btn-retour">Retour au tableau de bord</a>
-        <a href="{{url_for('deconnexion_admin')}}" class="btn-retour">Deconnexion</a>
+        <div class="butn">
+          <a href="{{ url_for('accueil_admin') }}" class="btn-retour">Retour au tableau de bord</a>
+          <a href="{{url_for('deconnexion_admin')}}" class="btn-retour">Deconnexion</a>
+        </div>
+        
       </div>
   <!-- MODALE -->
     <div class="modal" id="confirmModal">
