@@ -245,7 +245,13 @@
           <td>{{ abonnement.service}}</td>
           <td>{{ abonnement.date_debut.strftime("%d-%m-%Y") }}</td>
           <td>{{ abonnement.date_fin.strftime("%d-%m-%Y") if abonnement.date_fin else "-" }}</td>
-          <td style="color: red;">{{ "Actif" if abonnement.statut else "Inactif" }}</td>
+          <td>
+            {% if abonnement.date_fin and abonnement.date_debut < now %}  
+            <span style="color: red;"> Inactif </span>
+            {% else %}
+            <span class="statut" style="color: green;"> Actif</span>
+            {% endif %}
+          </td>
           <td>
             <form action="{{url_for('supprimer_abonnement',id=abonnement.id)}}" method="post" class="delete-form">
               <button type="submit" class="btn-admin">Suprimer</button>

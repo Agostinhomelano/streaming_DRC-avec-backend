@@ -12,7 +12,7 @@ app.secret_key = "1a6676b463603eaa5118f0a289721f25d52b7fb7be2afebccfadaa455b618b
 db = SQLAlchemy(app)
 
 BASE_DIR=os.path.dirname(os.path.abspath(__file__))
-DOSSIER_IMAGE='static/img'
+DOSSIER_IMAGE=os.path.join(BASE_DIR,'static','img')
 app.config['DOSSIER_IMAGE']=DOSSIER_IMAGE
 
 IMAGE_EXTENSIONS_VALIDES = {"png", "jpg", "jpeg", "gif"}
@@ -631,7 +631,8 @@ def supprimer_utilisateur(id):
 def list_abonnements():
     # route conservée telle quelle (ta page admin)
     abonnements = Abonnements.query.order_by(Abonnements.date_fin.desc()).all()
-    return render_template("admin/list_abonnement.html", abonnements=abonnements)
+    now=datetime.now()
+    return render_template("admin/list_abonnement.html", abonnements=abonnements, now=now)
 
 @app.route("/admin/liste_abonnements/supprimer_abonnement/<int:id>", methods=["POST", "GET"])
 def supprimer_abonnement(id):
