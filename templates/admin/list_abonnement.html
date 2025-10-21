@@ -246,10 +246,10 @@
           <td>{{ abonnement.date_debut.strftime("%d-%m-%Y") }}</td>
           <td>{{ abonnement.date_fin.strftime("%d-%m-%Y") if abonnement.date_fin else "-" }}</td>
           <td>
-            {% if abonnement.date_fin and abonnement.date_debut < now %}  
+            {% if abonnement.date_fin < now %}  
             <span style="color: red;"> Inactif </span>
             {% else %}
-            <span class="statut" style="color: green;"> Actif</span>
+            <span class="statut" style="color: rgb(4, 199, 4);"> Actif</span>
             {% endif %}
           </td>
           <td>
